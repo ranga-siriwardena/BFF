@@ -54,15 +54,15 @@ backend-for-frontend
       │   └── tests
       │       └── notification_mgt_service_test.bal
       ├── message-mgt
-      │     ├── message_mgt_service.bal
-      │     └── tests
-      │         └── message_mgt_service_test.bal
+      │   ├── message_mgt_service.bal
+      │   └── tests
+      │       └── message_mgt_service_test.bal
       ├── mobile-bff
-      │     ├── mobile_bff_service.bal
-      │     └── tests
-      │         └── mobile_bff_service_test.bal
+      │   ├── mobile_bff_service.bal
+      │   └── tests
+      │       └── mobile_bff_service_test.bal
       └── desktop-bff
-            ├── desktop_bff_service.bal
-            └── tests
-                └── desktop_bff_service_test.bal
+          ├── desktop_bff_service.bal
+          └── tests
+              └── desktop_bff_service_test.bal
 ```
