@@ -66,3 +66,401 @@ backend-for-frontend
           └── tests
               └── desktop_bff_service_test.bal
 ```
+
+- Create the above directories in your local machine and also create empty `.bal` files.
+
+- Then open the terminal and navigate to `service-composition/guide` and run Ballerina project initializing toolkit.
+```bash
+   $ ballerina init
+```
+
+### Developing the service
+
+Let's implement the set of downstream services first.  
+
+Appointment Management Service (appointment_mgt_service) is a REST API developed to manage health appointments for the members. For demonstration purpose it has a in-memory map to hold appointment data. It has capability to add appointments and retrieve appointments. 
+
+##### Skeleton code for appointment_mgt_service.bal
+```ballerina
+import ballerina/io;
+import ballerina/http;
+import ballerina/log;
+
+endpoint http:Listener listener {
+   port: 9092
+};
+
+// Appointment management is done using an in-memory map.
+// Add some sample appointments to 'apoinmetMap' at startup.
+map<json> appointmentMap;
+
+// RESTful service.
+@http:ServiceConfig { basePath: "/appointment-mgt" }
+service<http:Service> apoinment_service bind listener {
+
+   @http:ResourceConfig {
+       methods: ["POST"],
+       path: "/appointment"
+   }
+   addAppointment(endpoint client, http:Request req) {
+    // implementation  
+   }
+
+   @http:ResourceConfig {
+       methods: ["GET"],
+       path: "/appointment/list"
+   }
+   getAppointments(endpoint client, http:Request req) {
+    // implementation       
+   }
+
+}
+```
+
+Medical Record Management Service (medical_record_mgt_service) is a REST API developed to manage medical records for the members. For demonstration purpose it has a in-memory map to hold medical record.  It has capability to add medical records and retrieve them. 
+
+##### Skeleton code for medical_record_mgt_service.bal
+```ballerina
+import ballerina/io;
+import ballerina/http;
+import ballerina/log;
+
+endpoint http:Listener listener {
+   port: 9093
+};
+
+// Medical Record management is done using an in-memory map.
+// Add some sample Medical Records to 'medicalRecordMap' at startup.
+map<json> medicalRecordMap;
+
+// RESTful service.
+@http:ServiceConfig { basePath: "/medical_records" }
+service<http:Service> medical_record_service bind listener {
+
+   @http:ResourceConfig {
+       methods: ["POST"],
+       path: "/medical-record"
+   }
+   addMedicalRecord(endpoint client, http:Request req) {
+       // Implementation 
+   }
+ 
+   @http:ResourceConfig {
+       methods: ["GET"],
+       path: "/medical-record/list"
+   }
+   getMedicalRecords(endpoint client, http:Request req) {
+       // Implementation 
+   }
+ 
+}
+
+```
+
+Notification Management Service (notification_mgt_service) is a REST API developed to manage notifications. For demonstration purpose it has a in-memory map to hold notifications.  It has capability to add notifications and retrieve them. 
+
+##### Skeleton code for notification_mgt_service.bal
+```ballerina
+import ballerina/io;
+import ballerina/config;
+import ballerina/http;
+import ballerina/log;
+
+endpoint http:Listener listener {
+   port: 9094
+};
+
+// Notification management is done using an in-memory map.
+// Add some sample notifications to 'notificationMap' at startup.
+map<json> notificationMap;
+
+
+// RESTful service.
+@http:ServiceConfig { basePath: "/notification-mgt" }
+service<http:Service> notification_service bind listener {
+
+   @http:ResourceConfig {
+       methods: ["POST"],
+       path: "/notification"
+   }
+   addNotification(endpoint client, http:Request req) {
+       // Implementation 
+   }
+
+
+   @http:ResourceConfig {
+       methods: ["GET"],
+       path: "/notification/list"
+   }
+   getNotifications(endpoint client, http:Request req) {
+       // Implementation 
+   }
+
+
+}
+
+```
+
+Message Management Service (message_mgt_service) is a REST API developed to manage messages. For demonstration purpose it has a in-memory map to hold messages.  It has capability to add messages, retrieve all messages and retrieve unread messages. 
+
+##### Skeleton code for message_mgt_service.bal
+```ballerina
+
+import ballerina/io;
+import ballerina/config;
+import ballerina/http;
+import ballerina/log;
+
+endpoint http:Listener listener {
+   port: 9095
+};
+
+// Message management is done using an in-memory map.
+// Add some sample messages to 'messageMap' at startup.
+map<json> messageMap;
+
+
+// RESTful service.
+@http:ServiceConfig { basePath: "/message-mgt" }
+service<http:Service> message_service bind listener {
+
+   @http:ResourceConfig {
+       methods: ["POST"],
+       path: "/message"
+   }
+   addMessage(endpoint client, http:Request req) {
+
+      // Implementation 
+   }
+
+
+   @http:ResourceConfig {
+       methods: ["GET"],
+       path: "/message/list"
+   }
+   getMessages(endpoint client, http:Request req) {
+       // Implementation 
+   }
+
+   @http:ResourceConfig {
+       methods: ["GET"],
+       path: "/unread-message/list"
+   }
+   getUnreadMessages(endpoint client, http:Request req) {
+       // Implementation 
+
+}
+
+```
+
+Let’s look into the BFF implementation now. 
+
+Mobile BFF(mobile_bff_service) is a shim used to support Mobile user experience. In this use case, when loading mobile application home page it calls a single resource in Mobile BFF and retrieve appointments, medical records and messages. Also the mobile apps having different method of sending notifications hence home page loading does not need to involve notification management service.  This will reduce number of backend calls and help to load the home pages in much efficient way. 
+
+##### Skeleton code for mobile-bff.bal
+```ballerina
+
+import ballerina/io;
+import ballerina/http;
+import ballerina/log;
+
+endpoint http:Listener listener {
+   port: 9090
+};
+
+// Notification management is done using an in-memory map.
+// Add some sample notifications to 'notificationMap' at startup.
+//map<json> notificationMap;
+
+// Client endpoint to communicate with appointment management service
+endpoint http:Client appoinmentEP {
+   url: "http://localhost:9092/appointment-mgt"
+};
+
+// Client endpoint to communicate with medical record service
+endpoint http:Client medicalRecordEP {
+   url: "http://localhost:9093/medical_records"
+};
+
+// Client endpoint to communicate with message management service
+endpoint http:Client messageEP {
+   url: "http://localhost:9095/message-mgt"
+};
+
+
+// RESTful service.
+@http:ServiceConfig { basePath: "/mobile-bff" }
+service<http:Service> mobile_bff_service bind listener {
+
+   @http:ResourceConfig {
+       methods: ["GET"],
+       path: "/profile"
+   }
+   getUserProfile(endpoint client, http:Request req) {
+
+       // Call Appointment API and get appointment list
+
+       // Call Medical Record API and get medical record list
+
+       // Call Message API and get unread message list
+
+       // Aggregate the responses 
+
+       // Send response to the client.
+      
+   }
+
+   // This API may have more resources for other functionalities
+}
+
+```
+
+Desktop BFF(desktop_bff_service) is a shim used to support Desktop application user experience. In this use case, when loading desktop application home page it can offered to do multiple calls to its desktop_bff_service and retrieve comparatively large amount of data as per desktop application requirements.  In this use case Desktop application will call Desktop BFF separately to retrieve appointments and medical records. Also it will call Desktop BFF to retrieve Messages and Notifications in a single call. 
+
+##### Skeleton code for appointment_mgt_service.bal
+```ballerina
+
+import ballerina/io;
+import ballerina/http;
+import ballerina/log;
+
+endpoint http:Listener listener {
+   port: 9091
+};
+
+// Client endpoint to communicate with appointment management service
+endpoint http:Client appoinmentEP {
+   url: "http://localhost:9092/appointment-mgt"
+};
+
+// Client endpoint to communicate with medical record service
+endpoint http:Client medicalRecordEP {
+   url: "http://localhost:9093/medical_records"
+};
+
+// Client endpoint to communicate with notification management service
+endpoint http:Client notificationEP {
+   url: "http://localhost:9094/notification-mgt"
+};
+
+// Client endpoint to communicate with message management service
+endpoint http:Client messageEP {
+   url: "http://localhost:9095/message-mgt"
+};
+
+
+// RESTful service.
+@http:ServiceConfig { basePath: "/desktop-bff" }
+service<http:Service> desktop_bff_service bind listener {
+
+   @http:ResourceConfig {
+       methods: ["GET"],
+       path: "/alerts"
+   }
+   getAlerts(endpoint client, http:Request req) {
+
+       // This will return all message and notifications
+
+       // Call Notification API and get notification list
+
+       // Call Message API and get full message list
+
+       // Generate the response from notification and message aggregation 
+
+       // Send response to the client.  
+    }
+
+   @http:ResourceConfig {
+       methods: ["GET"],
+       path: "/appoinments"
+   }
+   getAppoinments(endpoint client, http:Request req) {
+       // Call Appointment API and get appointment list
+
+       // Generate the response
+      
+       // Send response to the client.
+           
+   }
+   @http:ResourceConfig {
+       methods: ["GET"],
+       path: "/medical-records"
+   }
+   getMedicalRecords(endpoint client, http:Request req) {
+
+       // Call Medical Record API and get medical record list
+    
+       // Generate the response
+
+       // Send response to the client.
+   }
+
+   // This API may have more resources for other functionalities
+}
+
+```
+
+## Testing
+
+### Invoking the service
+
+Navigate to BFF/guide and run following commands in separate terminals to start all downstream services. These commands will start appointment_mgt_service, appointment_mgt_service, notification_mgt_service and notification_mgt_service on ports 9092, 9093, 9094 and 9095 respectively. 
+
+```bash
+   $ ballerina run appointment-mgt 
+```
+
+```bash
+   $ ballerina run medical-record-mgt
+```
+
+```bash
+   $ ballerina run notification-mgt
+```
+
+```bash
+   $ ballerina run message-mgt
+```
+
+Similarly run bellow commands to start the BFF layer services. These commands will start mobile_bff_service and desktop_bff_service on ports 9090 and 9091 respectively. 
+
+
+```bash
+   $ ballerina run mobile-bff 
+```
+
+```bash
+   $ ballerina run desktop-bff
+```
+
+For demonstration purpose let’s add some data to downstream services. Use following command to load some appointments, medical records, notifications and messages to the services. 
+
+```bash
+   $ sh load_data.sh
+```
+
+Now we have some data loaded into the downstream services hence we can call the BFF layer to retrieve the data as per the requirement. 
+
+Mobile application can call Mobile BFF to retrieve the user profile using a single API call. Following is a sample CURL commands. 
+
+```bash
+   $ curl -X GET http://localhost:9090/mobile-bff/profile
+```
+
+Desktop application can call Desktop BFF to render user profile using few API calls. Following are set of CURL commands which can use to invoke Desktop BFF. 
+
+```bash
+   $ curl -X GET http://localhost:9091/desktop-bff/appointments
+```
+
+```bash
+   $ curl -X GET http://localhost:9091/desktop-bff/medical-records
+```
+
+```bash
+   $ curl -X GET http://localhost:9091/desktop-bff/alerts
+```
+
+
+
+
