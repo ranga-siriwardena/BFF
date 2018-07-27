@@ -76,7 +76,7 @@ service<http:Service> desktop_bff_service bind listener {
         methods: ["GET"],
         path: "/appointments"
     }
-    getAppoinments(endpoint client, http:Request req) {
+    getAppointments(endpoint client, http:Request req) {
 
         // Call Appointment API and get appointment list
         json appointmentList = sendGetRequest(appointmentEP, "/appointment/list");

@@ -7,9 +7,6 @@ endpoint http:Listener listener {
     port: 9090
 };
 
-// Notification management is done using an in-memory map.
-// Add some sample notifications to 'notificationMap' at startup.
-//map<json> notificationMap;
 
 // Client endpoint to communicate with appointment management service
 endpoint http:Client appointmentEP {
