@@ -91,12 +91,12 @@ endpoint http:Listener listener {
 };
 
 // Appointment management is done using an in-memory map.
-// Add some sample appointments to 'apoinmetMap' at startup.
+// Add some sample appointments to 'appointmentMap' at startup.
 map<json> appointmentMap;
 
 // RESTful service.
 @http:ServiceConfig { basePath: "/appointment-mgt" }
-service<http:Service> apoinment_service bind listener {
+service<http:Service> appointment_service bind listener {
 
    @http:ResourceConfig {
        methods: ["POST"],
@@ -273,7 +273,7 @@ endpoint http:Listener listener {
 //map<json> notificationMap;
 
 // Client endpoint to communicate with appointment management service
-endpoint http:Client appoinmentEP {
+endpoint http:Client appointmentEP {
    url: "http://localhost:9092/appointment-mgt"
 };
 
@@ -329,7 +329,7 @@ endpoint http:Listener listener {
 };
 
 // Client endpoint to communicate with appointment management service
-endpoint http:Client appoinmentEP {
+endpoint http:Client appointmentEP {
    url: "http://localhost:9092/appointment-mgt"
 };
 
@@ -372,7 +372,7 @@ service<http:Service> desktop_bff_service bind listener {
 
    @http:ResourceConfig {
        methods: ["GET"],
-       path: "/appoinments"
+       path: "/appointments"
    }
    getAppoinments(endpoint client, http:Request req) {
        // Call Appointment API and get appointment list
@@ -436,7 +436,7 @@ Similarly run bellow commands to start the BFF layer services. These commands wi
 For demonstration purpose let’s add some data to downstream services. Use following command to load some appointments, medical records, notifications and messages to the services. 
 
 ```bash
-   $ sh load_data.sh
+   $ ballerina run sample-data-publisher --config sample-data-publisher/sample-data.toml 
 ```
 
 Now we have some data loaded into the downstream services hence we can call the BFF layer to retrieve the data as per the requirement. 
