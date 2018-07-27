@@ -66,7 +66,7 @@ service<http:Service> notification_service bind listener {
         log:printInfo(notificationsResponse.toString());
 
         // Set the JSON payload in the outgoing response message.
-        res.setJsonPayload(notificationsResponse);
+        res.setJsonPayload(untaint notificationsResponse);
 
         // Send response to the client.
         client->respond(res) but {

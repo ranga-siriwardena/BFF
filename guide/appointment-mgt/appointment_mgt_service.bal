@@ -8,13 +8,13 @@ endpoint http:Listener listener {
 };
 
 // Appointment management is done using an in-memory map.
-// Add some sample appointments to 'apoinmetMap' at startup.
+// Add some sample appointments to 'appointmetMap' at startup.
 map<json> appointmentMap;
 
 
 // RESTful service.
 @http:ServiceConfig { basePath: "/appointment-mgt" }
-service<http:Service> apoinment_service bind listener {
+service<http:Service> appointment_service bind listener {
 
     @http:ResourceConfig {
         methods: ["POST"],
@@ -30,7 +30,7 @@ service<http:Service> apoinment_service bind listener {
         appointmentMap[appointmentId] = appointmentReq;
 
         // Create response message.
-        json payload = { status: "Appointment Created.", apoinmentId: appointmentId };
+        json payload = { status: "Appointment Created.", appointmentId: appointmentId };
         http:Response response;
         response.setJsonPayload(untaint payload);
 
@@ -55,20 +55,20 @@ service<http:Service> apoinment_service bind listener {
         http:Response res = new;
 
         // Create a json array with Appointments
-        json apoinmentsResponse = { Appoinments: [] };
+        json appointmentsResponse = { Appointments: [] };
 
         int i = 0;
         foreach k, v in appointmentMap {
-            json apoinmentValue = v.Appointment;
-            log:printInfo(apoinmentValue.toString());
-            apoinmentsResponse.Appoinments[i] = apoinmentValue;
+            json appointmentValue = v.Appointment;
+            log:printInfo(appointmentValue.toString());
+            appointmentsResponse.Appointments[i] = appointmentValue;
             i++;
         }
 
-        log:printInfo(apoinmentsResponse.toString());
+        log:printInfo(appointmentsResponse.toString());
 
         // Set the JSON payload in the outgoing response message.
-        res.setJsonPayload(apoinmentsResponse);
+        res.setJsonPayload(untaint appointmentsResponse);
 
         // Send response to the client.
         client->respond(res) but {

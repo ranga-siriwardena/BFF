@@ -66,7 +66,7 @@ service<http:Service> medical_record_service bind listener {
         log:printInfo(medicalRecordsResponse.toString());
 
         // Set the JSON payload in the outgoing response message.
-        res.setJsonPayload(medicalRecordsResponse);
+        res.setJsonPayload(untaint medicalRecordsResponse);
 
         // Send response to the client.
         client->respond(res) but {

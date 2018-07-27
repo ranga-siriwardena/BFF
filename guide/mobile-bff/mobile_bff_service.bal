@@ -12,7 +12,7 @@ endpoint http:Listener listener {
 //map<json> notificationMap;
 
 // Client endpoint to communicate with appointment management service
-endpoint http:Client appoinmentEP {
+endpoint http:Client appointmentEP {
     url: "http://localhost:9092/appointment-mgt"
 };
 
@@ -41,8 +41,8 @@ service<http:Service> mobile_bff_service bind listener {
 
 
         // Call Appointment API and get appointment list
-        json appoinmentList = sendGetRequest(appoinmentEP, "/appointment/list");
-        log:printInfo(appoinmentList.toString());
+        json appointmentList = sendGetRequest(appointmentEP, "/appointment/list");
+        log:printInfo(appointmentList.toString());
 
         // Call Medical Record API and get medical record list
         json medicalRecordList = sendGetRequest(medicalRecordEP, "/medical-record/list");
@@ -55,7 +55,7 @@ service<http:Service> mobile_bff_service bind listener {
 
         // Aggregate the responses
         json profileJson = {};
-        profileJson.Appoinments = appoinmentList.Appoinments;
+        profileJson.Appointments = appointmentList.Appointments;
         profileJson.MedicalRecords = medicalRecordList.MedicalRecords;
         profileJson.Messages = unreadMessageList.Messages;
 
@@ -63,7 +63,7 @@ service<http:Service> mobile_bff_service bind listener {
 
 
         http:Response response;
-        response.setJsonPayload(profileJson);
+        response.setJsonPayload(untaint profileJson);
 
 
         // Send response to the client.

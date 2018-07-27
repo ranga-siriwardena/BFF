@@ -68,7 +68,7 @@ service<http:Service> message_service bind listener {
         log:printInfo(messageResponse.toString());
 
         // Set the JSON payload in the outgoing response message.
-        res.setJsonPayload(messageResponse);
+        res.setJsonPayload(untaint messageResponse);
 
         // Send response to the client.
         client->respond(res) but {
@@ -94,8 +94,7 @@ service<http:Service> message_service bind listener {
             json messageValue = v.Message;
             string messageStatus = messageValue.Status.toString();
             if (messageStatus == "Unread"){
-                log:
-                printInfo(messageValue.toString());
+                log:printInfo(messageValue.toString());
                 messageResponse.Messages[i] = messageValue;
                 i++;
             }
@@ -105,7 +104,7 @@ service<http:Service> message_service bind listener {
         log:printInfo(messageResponse.toString());
 
         // Set the JSON payload in the outgoing response message.
-        res.setJsonPayload(messageResponse);
+        res.setJsonPayload(untaint messageResponse);
 
         // Send response to the client.
         client->respond(res) but {

@@ -9,7 +9,7 @@ endpoint http:Listener listener {
 
 
 // Client endpoint to communicate with appointment management service
-endpoint http:Client appoinmentEP {
+endpoint http:Client appointmentEP {
     url: "http://localhost:9092/appointment-mgt"
 };
 
@@ -62,7 +62,7 @@ service<http:Service> desktop_bff_service bind listener {
 
 
         http:Response response;
-        response.setJsonPayload(alertJson);
+        response.setJsonPayload(untaint alertJson);
 
 
         // Send response to the client.
@@ -79,20 +79,20 @@ service<http:Service> desktop_bff_service bind listener {
     getAppoinments(endpoint client, http:Request req) {
 
         // Call Appointment API and get appointment list
-        json appoinmentList = sendGetRequest(appoinmentEP, "/appointment/list");
-        log:printInfo(appoinmentList.toString());
+        json appointmentList = sendGetRequest(appointmentEP, "/appointment/list");
+        log:printInfo(appointmentList.toString());
 
 
         // Generate the response
-        json apoinmentJson = {};
+        json appointmentJson = {};
 
-        apoinmentJson.Appoinments = appoinmentList.Appoinments;
+        appointmentJson.Appointments = appointmentList.Appointments;
 
-        io:println(apoinmentJson);
+        io:println(appointmentJson);
 
 
         http:Response response;
-        response.setJsonPayload(apoinmentJson);
+        response.setJsonPayload(untaint appointmentJson);
 
         // Send response to the client.
         _ = client->respond(response) but {
@@ -115,13 +115,13 @@ service<http:Service> desktop_bff_service bind listener {
         // Generate the response
         json medicalRecordJson = {};
 
-        medicalRecordJson.Appoinments = medicalRecordList.MedicalRecords;
+        medicalRecordJson.MedicalRecords = medicalRecordList.MedicalRecords;
 
         io:println(medicalRecordJson);
 
 
         http:Response response;
-        response.setJsonPayload(medicalRecordJson);
+        response.setJsonPayload(untaint medicalRecordJson);
 
         // Send response to the client.
         _ = client->respond(response) but {
