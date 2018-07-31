@@ -34,31 +34,25 @@ service<http:Service> mobile_bff_service bind listener {
     }
     getUserProfile(endpoint client, http:Request req) {
 
-        log:printInfo("getUserProfile!!!");
-
+        log:printInfo("getUserProfile...");
 
         // Call Appointment API and get appointment list
         json appointmentList = sendGetRequest(appointmentEP, "/appointment/list");
-        log:printInfo(appointmentList.toString());
 
         // Call Medical Record API and get medical record list
         json medicalRecordList = sendGetRequest(medicalRecordEP, "/medical-record/list");
-        log:printInfo(medicalRecordList.toString());
 
         // Call Message API and get unread message list
         json unreadMessageList = sendGetRequest(messageEP, "/unread-message/list");
-        log:printInfo(unreadMessageList.toString());
 
 
-        // Aggregate the responses
+        // Aggregate the responses to a JSON
         json profileJson = {};
         profileJson.Appointments = appointmentList.Appointments;
         profileJson.MedicalRecords = medicalRecordList.MedicalRecords;
         profileJson.Messages = unreadMessageList.Messages;
 
-        io:println(profileJson);
-
-
+        // Set JSON payload to response
         http:Response response;
         response.setJsonPayload(untaint profileJson);
 

@@ -1,5 +1,3 @@
-import ballerina/io;
-import ballerina/config;
 import ballerina/http;
 import ballerina/log;
 
@@ -14,7 +12,7 @@ map<json> medicalRecordMap;
 
 // RESTful service.
 @http:ServiceConfig { basePath: "/medical_records" }
-service<http:Service> medical_record_service bind listener {
+service<http:Service> medical_record_mgt_service bind listener {
 
     @http:ResourceConfig {
         methods: ["POST"],
@@ -22,10 +20,9 @@ service<http:Service> medical_record_service bind listener {
     }
     addMedicalRecord(endpoint client, http:Request req) {
 
-        log:printInfo("addMedicalRecord!!!");
+        log:printInfo("addMedicalRecord...");
 
         json medicalRecordtReq = check req.getJsonPayload();
-        log:printInfo(medicalRecordtReq.toString());
         string medicalRecordId = medicalRecordtReq.MedicalRecord.ID.toString();
         medicalRecordMap[medicalRecordId] = medicalRecordtReq;
 
@@ -50,26 +47,24 @@ service<http:Service> medical_record_service bind listener {
         path: "/medical-record/list"
     }
     getMedicalRecords(endpoint client, http:Request req) {
-        log:printInfo("getMedicalRecords!!!");
+        log:printInfo("getMedicalRecords...");
 
-        http:Response res = new;
+        http:Response response = new;
         json medicalRecordsResponse = { MedicalRecords: [] };
 
+        // Get all Medical Records from map and add them to response
         int i = 0;
         foreach k, v in medicalRecordMap {
             json medicalRecordValue = v.MedicalRecord;
-            log:printInfo(medicalRecordValue.toString());
             medicalRecordsResponse.MedicalRecords[i] = medicalRecordValue;
             i++;
         }
 
-        log:printInfo(medicalRecordsResponse.toString());
-
         // Set the JSON payload in the outgoing response message.
-        res.setJsonPayload(untaint medicalRecordsResponse);
+        response.setJsonPayload(untaint medicalRecordsResponse);
 
         // Send response to the client.
-        client->respond(res) but {
+        client->respond(response) but {
             error e => log:printError(
                            "Error sending response", err = e)
         };

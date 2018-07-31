@@ -52,7 +52,7 @@ function main(string... args) {
 
     io:println("Adding Messages...");
     json messageData1 = { "Message": { "ID": "MSG01", "From":"Dr. Caroline Caroline", "Subject": "Regarding Glucose test result", "Content": "Dear member, your test result remain normal", "Status" : "Read"}};
-    json messageData2 = { "Message": { "ID": "MSG02", "From":"Dr. Sandra Robert", "Subject": "Regarding flu season", "Content": "Dear member, We highly recomend you to get the flu vacination to prevent yourself from flu", "Status" : "Unread"}};
+    json messageData2 = { "Message": { "ID": "MSG02", "From":"Dr. Sandra Robert", "Subject": "Regarding flu season", "Content": "Dear member, We highly recommend you to get the flu vaccination to prevent yourself from flu", "Status" : "Unread"}};
     json messageData3 = { "Message": { "ID": "MSG03", "From":"Dr. Peter Mayr", "Subject": "Regarding upcoming blood test", "Content": "Dear member, Your Glucose test is scheduled in early next month", "Status" : "Unread"}};
     response = sendPostRequest(messageEP, "/message", messageData1);
     response = sendPostRequest(messageEP, "/message", messageData2);

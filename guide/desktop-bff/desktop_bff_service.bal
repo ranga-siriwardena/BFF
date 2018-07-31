@@ -40,17 +40,13 @@ service<http:Service> desktop_bff_service bind listener {
     getAlerts(endpoint client, http:Request req) {
 
         // This will return all message and notifications
-        log:printInfo("getAlerts!!!");
-
+        log:printInfo("getAlerts...");
 
         // Call Notification API and get notification list
         json notificationList = sendGetRequest(notificationEP, "/notification/list");
-        log:printInfo(notificationList.toString());
 
         // Call Message API and get full message list
         json messageList = sendGetRequest(messageEP, "/message/list");
-        log:printInfo(messageList.toString());
-
 
         // Generate the response from notification and message aggregation
         json alertJson = {};
@@ -58,12 +54,9 @@ service<http:Service> desktop_bff_service bind listener {
         alertJson.Notifications = notificationList.Notifications;
         alertJson.Messages = messageList.Messages;
 
-        io:println(alertJson);
-
-
+        // Set JSON payload to response
         http:Response response;
         response.setJsonPayload(untaint alertJson);
-
 
         // Send response to the client.
         _ = client->respond(response) but {
@@ -78,19 +71,16 @@ service<http:Service> desktop_bff_service bind listener {
     }
     getAppointments(endpoint client, http:Request req) {
 
+        log:printInfo("getAppointments...");
+
         // Call Appointment API and get appointment list
         json appointmentList = sendGetRequest(appointmentEP, "/appointment/list");
-        log:printInfo(appointmentList.toString());
-
 
         // Generate the response
         json appointmentJson = {};
-
         appointmentJson.Appointments = appointmentList.Appointments;
 
-        io:println(appointmentJson);
-
-
+        // Set JSON payload to response
         http:Response response;
         response.setJsonPayload(untaint appointmentJson);
 
@@ -107,19 +97,16 @@ service<http:Service> desktop_bff_service bind listener {
     }
     getMedicalRecords(endpoint client, http:Request req) {
 
+        log:printInfo("getMedicalRecords...");
+
         // Call Medical Record API and get medical record list
         json medicalRecordList = sendGetRequest(medicalRecordEP, "/medical-record/list");
-        log:printInfo(medicalRecordList.toString());
-
 
         // Generate the response
         json medicalRecordJson = {};
-
         medicalRecordJson.MedicalRecords = medicalRecordList.MedicalRecords;
 
-        io:println(medicalRecordJson);
-
-
+        // Set JSON payload to response
         http:Response response;
         response.setJsonPayload(untaint medicalRecordJson);
 

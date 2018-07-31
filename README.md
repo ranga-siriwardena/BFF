@@ -428,7 +428,17 @@ Now we have some data loaded into the downstream services hence we can call the 
 Mobile application can call Mobile BFF to retrieve the user profile using a single API call. Following is a sample CURL commands. 
 
 ```bash
-   $ curl -X GET http://localhost:9090/mobile-bff/profile
+   $ curl -v -X GET http://localhost:9090/mobile-bff/profile
+
+   Output:
+
+   < HTTP/1.1 200 OK
+   < content-type: application/json
+   < content-length: 900
+   < server: ballerina/0.980.1
+
+   {"Appointments":[{"ID":"APT01","Name":"Family Medicine","Location":"Main Hospital","Time":"2018-08-23, 08.30AM","Description":"Doctor visit for family medicine"},{"ID":"APT02","Name":"Lab Test Appointment","Location":"Main Lab","Time":"2018-08-20, 07.30AM","Description":"Blood test"}],"MedicalRecords":[{"ID":"MED01","Name":"Fasting Glucose Test","Description":"Test Result for Fasting Glucose test is normal"},{"ID":"MED02","Name":"Allergies","Description":"Allergy condition recorded due to Summer allergies"}],"Messages":[{"ID":"MSG02","From":"Dr. Sandra Robert","Subject":"Regarding flu season","Content":"Dear member, We highly recommend you to get the flu vaccination to prevent yourself from flu","Status":"Unread"},{"ID":"MSG03","From":"Dr. Peter Mayr","Subject":"Regarding upcoming blood test","Content":"Dear member, Your Glucose test is scheduled in early next month","Status":"Unread"}]}
+
 ```
 
 Desktop application can call Desktop BFF to render user profile using few API calls. Following are set of CURL commands which can use to invoke Desktop BFF. 
@@ -486,3 +496,11 @@ Once you are done with the development, you can deploy the services using any of
    ballerina: initiating service(s) in 'target/mobile-bff.balx'
    ballerina: started HTTP/WS endpoint 0.0.0.0:9090
 ```
+
+### Deploying on Docker
+
+You can run the service that we developed above as a Docker container. As Ballerina platform includes [Ballerina_Docker_Extension](https://github.com/ballerinax/docker), which offers native support for running ballerina programs on containers, you just need to put the corresponding Docker annotations on your service code.
+
+Let's see how we can deploy the travel_agency_service we developed above on Docker. When invoking this service make sure that the other three services (airline_reservation, hotel_reservation, and car_rental) are also up and running.
+
+- In our travel_agency_service, we need to import  `ballerinax/docker` and use the annotation `@docker:Config` as shown below to enable Docker image generation during the build time.

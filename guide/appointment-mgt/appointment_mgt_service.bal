@@ -1,5 +1,3 @@
-import ballerina/io;
-import ballerina/config;
 import ballerina/http;
 import ballerina/log;
 
@@ -14,7 +12,7 @@ map<json> appointmentMap;
 
 // RESTful service.
 @http:ServiceConfig { basePath: "/appointment-mgt" }
-service<http:Service> appointment_service bind listener {
+service<http:Service> appointment_mgt_service bind listener {
 
     @http:ResourceConfig {
         methods: ["POST"],
@@ -22,10 +20,9 @@ service<http:Service> appointment_service bind listener {
     }
     addAppointment(endpoint client, http:Request req) {
 
-        log:printInfo("addAppointment!!!");
+        log:printInfo("addAppointment...");
 
         json appointmentReq = check req.getJsonPayload();
-        log:printInfo(appointmentReq.toString());
         string appointmentId = appointmentReq.Appointment.ID.toString();
         appointmentMap[appointmentId] = appointmentReq;
 
@@ -50,28 +47,26 @@ service<http:Service> appointment_service bind listener {
         path: "/appointment/list"
     }
     getAppointments(endpoint client, http:Request req) {
-        log:printInfo("getAppointments!!!");
+        log:printInfo("getAppointments...");
 
-        http:Response res = new;
+        http:Response response = new;
 
         // Create a json array with Appointments
         json appointmentsResponse = { Appointments: [] };
 
+        // Get all Appointments from map and add them to response
         int i = 0;
         foreach k, v in appointmentMap {
             json appointmentValue = v.Appointment;
-            log:printInfo(appointmentValue.toString());
             appointmentsResponse.Appointments[i] = appointmentValue;
             i++;
         }
 
-        log:printInfo(appointmentsResponse.toString());
-
         // Set the JSON payload in the outgoing response message.
-        res.setJsonPayload(untaint appointmentsResponse);
+        response.setJsonPayload(untaint appointmentsResponse);
 
         // Send response to the client.
-        client->respond(res) but {
+        client->respond(response) but {
             error e => log:printError(
                            "Error sending response", err = e)
         };

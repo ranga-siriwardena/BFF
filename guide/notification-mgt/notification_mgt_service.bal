@@ -14,7 +14,7 @@ map<json> notificationMap;
 
 // RESTful service.
 @http:ServiceConfig { basePath: "/notification-mgt" }
-service<http:Service> notification_service bind listener {
+service<http:Service> notification_mgt_service bind listener {
 
     @http:ResourceConfig {
         methods: ["POST"],
@@ -22,10 +22,9 @@ service<http:Service> notification_service bind listener {
     }
     addNotification(endpoint client, http:Request req) {
 
-        log:printInfo("addNotification!!!");
+        log:printInfo("addNotification...");
 
         json notificationReq = check req.getJsonPayload();
-        log:printInfo(notificationReq.toString());
         string notificationId = notificationReq.Notification.ID.toString();
         notificationMap[notificationId] = notificationReq;
 
@@ -50,26 +49,25 @@ service<http:Service> notification_service bind listener {
         path: "/notification/list"
     }
     getNotifications(endpoint client, http:Request req) {
-        log:printInfo("getNotifications!!!");
 
-        http:Response res = new;
+        log:printInfo("getNotifications...");
+
+        http:Response response = new;
         json notificationsResponse = { Notifications: [] };
 
+        // Get all Notifications from map and add them to response
         int i = 0;
         foreach k, v in notificationMap {
             json notificationValue = v.Notification;
-            log:printInfo(notificationValue.toString());
             notificationsResponse.Notifications[i] = notificationValue;
             i++;
         }
 
-        log:printInfo(notificationsResponse.toString());
-
         // Set the JSON payload in the outgoing response message.
-        res.setJsonPayload(untaint notificationsResponse);
+        response.setJsonPayload(untaint notificationsResponse);
 
         // Send response to the client.
-        client->respond(res) but {
+        client->respond(response) but {
             error e => log:printError(
                            "Error sending response", err = e)
         };

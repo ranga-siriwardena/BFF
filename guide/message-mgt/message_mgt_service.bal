@@ -1,5 +1,3 @@
-import ballerina/io;
-import ballerina/config;
 import ballerina/http;
 import ballerina/log;
 
@@ -14,7 +12,7 @@ map<json> messageMap;
 
 // RESTful service.
 @http:ServiceConfig { basePath: "/message-mgt" }
-service<http:Service> message_service bind listener {
+service<http:Service> message_mgt_service bind listener {
 
     @http:ResourceConfig {
         methods: ["POST"],
@@ -22,10 +20,9 @@ service<http:Service> message_service bind listener {
     }
     addMessage(endpoint client, http:Request req) {
 
-        log:printInfo("addMessage!!!");
+        log:printInfo("addMessage...");
 
         json messageReq = check req.getJsonPayload();
-        log:printInfo(messageReq.toString());
         string messageId = messageReq.Message.ID.toString();
         messageMap[messageId] = messageReq;
 
@@ -50,28 +47,27 @@ service<http:Service> message_service bind listener {
         path: "/message/list"
     }
     getMessages(endpoint client, http:Request req) {
-        log:printInfo("getMessages!!!");
 
-        http:Response res = new;
+        log:printInfo("getMessages...");
+
+        http:Response response = new;
 
         // Create a json array with Messages
         json messageResponse = { Messages: [] };
 
+        // Get all Messages from map and add them to response
         int i = 0;
         foreach k, v in messageMap {
             json messageValue = v.Message;
-            log:printInfo(messageValue.toString());
             messageResponse.Messages[i] = messageValue;
             i++;
         }
 
-        log:printInfo(messageResponse.toString());
-
         // Set the JSON payload in the outgoing response message.
-        res.setJsonPayload(untaint messageResponse);
+        response.setJsonPayload(untaint messageResponse);
 
         // Send response to the client.
-        client->respond(res) but {
+        client->respond(response) but {
             error e => log:printError(
                            "Error sending response", err = e)
         };
@@ -82,32 +78,31 @@ service<http:Service> message_service bind listener {
         path: "/unread-message/list"
     }
     getUnreadMessages(endpoint client, http:Request req) {
-        log:printInfo("getUnreadMessages!!!");
 
-        http:Response res = new;
+        log:printInfo("getUnreadMessages...");
+
+        http:Response response = new;
 
         // Create a json array with Messages
         json messageResponse = { Messages: [] };
 
+        // Get all Messages from map and add them to response
         int i = 0;
         foreach k, v in messageMap {
             json messageValue = v.Message;
             string messageStatus = messageValue.Status.toString();
             if (messageStatus == "Unread"){
-                log:printInfo(messageValue.toString());
                 messageResponse.Messages[i] = messageValue;
                 i++;
             }
 
         }
 
-        log:printInfo(messageResponse.toString());
-
         // Set the JSON payload in the outgoing response message.
-        res.setJsonPayload(untaint messageResponse);
+        response.setJsonPayload(untaint messageResponse);
 
         // Send response to the client.
-        client->respond(res) but {
+        client->respond(response) but {
             error e => log:printError(
                            "Error sending response", err = e)
         };
