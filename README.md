@@ -420,7 +420,7 @@ Similarly run bellow commands to start the BFF layer services. These commands wi
 For demonstration purpose let’s add some data to downstream services. Use following command to load some appointments, medical records, notifications and messages to the services. 
 
 ```bash
-   $ ballerina run sample-data-publisher --config sample-data-publisher/sample-data.toml 
+   $ ballerina run sample-data-publisher --config sample-data-publisher/sample_data.toml 
 ```
 
 Now we have some data loaded into the downstream services hence we can call the BFF layer to retrieve the data as per the requirement. 
