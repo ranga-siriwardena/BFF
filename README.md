@@ -443,7 +443,6 @@ Mobile application can call Mobile BFF to retrieve the user profile using a sing
    "Messages":[{"ID":"MSG02","From":"Dr. Sandra Robert","Subject":"Regarding flu season","Content":"Dear member, We highly recommend you to get the flu vaccination to prevent yourself from flu","Status":"Unread"},{"ID":"MSG03","From":"Dr. Peter Mayr","Subject":"Regarding upcoming blood test","Content":"Dear member, Your Glucose test is scheduled in early next month","Status":"Unread"}]
    }
   
-
 ```
 
 Desktop application can call Desktop BFF to render user profile using few API calls. Following are set of CURL commands which can use to invoke Desktop BFF. 
@@ -466,6 +465,7 @@ Desktop application can call Desktop BFF to render user profile using few API ca
    $ curl -v -X GET http://localhost:9091/desktop-bff/medical-records
 
    Output:
+
    < HTTP/1.1 200 OK
    < content-type: application/json
    < content-length: 229
