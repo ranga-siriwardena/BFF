@@ -541,9 +541,9 @@ You can run the service that we developed above as a Docker container. As Baller
 Let's see how we can deploy the mobile_bff_service and desktop_bff_service we developed above on Docker. When invoking this service make sure that the other four services (appointment_mgt_service, medical_record_mgt_service, notification_mgt_service, and message_mgt_service) are also up and running.
 
 
-- In our mobile_bff_service, we need to import ballerinax/docker and use the annotation @docker:Config as shown below to enable Docker image generation during the build time.
+- In our mobile_bff_service and desktop_bff_service, we need to import ballerinax/docker and use the annotation @docker:Config as shown below to enable Docker image generation during the build time.
 
-##### mobile_bff_service.bal
+##### Skeleton code for mobile_bff_service.bal
 ```ballerina
 import ballerina/http;
 import ballerinax/docker;
@@ -567,9 +567,7 @@ service<http:Service> mobile_bff_service bind listener {
 ....
 ```
 
-- In our desktop_bff_service, we need to import ballerinax/docker and use the annotation @docker:Config as shown below to enable Docker image generation during the build time.
-
-##### desktop_bff_service.bal
+##### Skeleton code for desktop_bff_service.bal
 ```ballerina
 import ballerina/http;
 import ballerinax/docker;
