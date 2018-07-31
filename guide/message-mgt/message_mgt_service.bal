@@ -1,6 +1,15 @@
 import ballerina/http;
 import ballerina/log;
+import ballerinax/docker;
 
+
+@docker:Config {
+    registry:"ballerina.guides.io",
+    name:"message_mgt_service",
+    tag:"v1.0"
+}
+
+@docker:Expose{}
 endpoint http:Listener listener {
     port: 9095
 };
