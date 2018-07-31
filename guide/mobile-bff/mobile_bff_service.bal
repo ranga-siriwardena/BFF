@@ -77,11 +77,9 @@ function sendGetRequest(http:Client httpClient1, string context) returns (json) 
 
     match response {
         http:Response resp => {
-            io:println("GET request:");
             var msg = resp.getJsonPayload();
             match msg {
                 json jsonPayload => {
-                    io:println(jsonPayload);
                     value = jsonPayload;
                 }
                 error err => {
