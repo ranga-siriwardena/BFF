@@ -540,6 +540,7 @@ You can run the service that we developed above as a Docker container. As Baller
 
 Let's see how we can deploy the mobile_bff_service and desktop_bff_service we developed above on Docker. When invoking this service make sure that the other four services (appointment_mgt_service, medical_record_mgt_service, notification_mgt_service, and message_mgt_service) are also up and running.
 
+
 - In our mobile_bff_service, we need to import ballerinax/docker and use the annotation @docker:Config as shown below to enable Docker image generation during the build time.
 
 ##### mobile_bff_service.bal
@@ -594,6 +595,7 @@ service<http:Service> desktop_bff_service bind listener {
 ....
 ```
 
+
 - Now you can build Ballerina executable archives (.balx) of the services that we developed above, using following commands. This will also create the corresponding Docker images using the Docker annotations that you have configured above. Navigate to backend-for-frontend/guide and run the following command.
 
 ```
@@ -622,20 +624,19 @@ service<http:Service> desktop_bff_service bind listener {
         docker run -d -p 9091:9091 ballerina.guides.io/desktop_bff_service:v1.0
 ```
 
-- Once you successfully build the Docker images, you can run them with the `` docker run`` command that is shown in the previous step output section.
+
+- Once you successfully build the Docker images, you can run them with the `` docker run`` command that is shown in the previous step output section. Here we run the Docker images with flag`` -p <host_port>:<container_port>``. So that we use the host port 9090 and the container port 9090 for mobile_bff_service and we use the host port 9091 and the container port 9091 for desktop_bff_service. Therefore you can access the services through the host port.
 
 ```bash
    $ docker run -d -p 9090:9090 ballerina.guides.io/mobile_bff_service:v1.0
 ```
-Here we run the Docker images with flag`` -p <host_port>:<container_port>`` so that we use the host port 9090 and the container port 9090. Therefore you can access the service through the host port.
 
 ```bash
    $ docker run -d -p 9091:9091 ballerina.guides.io/desktop_bff_service:v1.0
 ```
-Here we run the Docker images with flag`` -p <host_port>:<container_port>`` so that we use the host port 9091 and the container port 9091. Therefore you can access the service through the host port.
 
 
-- Verify Docker container is running with the use of `` $ docker ps``. The status of the Docker container should be shown as 'Up'.
+- Verify Docker container is running with the use of `` $ docker ps`` command. The status of the Docker container should be shown as 'Up'.
 
 ```bash
    $ docker ps
