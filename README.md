@@ -249,7 +249,7 @@ Let’s look into the BFF implementation now.
 
 Mobile BFF(mobile_bff_service) is a shim used to support Mobile user experience. In this use case, when loading mobile application home page it calls a single resource in Mobile BFF and retrieve appointments, medical records and messages. Also the mobile apps having different method of sending notifications hence home page loading does not need to involve notification management service.  This will reduce number of backend calls and help to load the home pages in much efficient way. 
 
-##### Skeleton code for mobile-bff.bal
+##### Skeleton code for mobile_bff_service.bal
 ```ballerina
 
 import ballerina/http;
@@ -303,7 +303,7 @@ service<http:Service> mobile_bff_service bind listener {
 
 Desktop BFF(desktop_bff_service) is a shim used to support Desktop application user experience. In this use case, when loading desktop application home page it can offered to do multiple calls to its desktop_bff_service and retrieve comparatively large amount of data as per desktop application requirements.  In this use case Desktop application will call Desktop BFF separately to retrieve appointments and medical records. Also it will call Desktop BFF to retrieve Messages and Notifications in a single call. 
 
-##### Skeleton code for appointment_mgt_service.bal
+##### Skeleton code for desktop_bff_service.bal
 ```ballerina
 
 import ballerina/http;
