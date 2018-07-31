@@ -1,8 +1,8 @@
-# Backend For Frontend
+# Backends For Frontends
 
-Backends For Frontends is a Microservice design pattern and core idea is to define different backend for each kind of front-end[1][2]. This will allow  each type of user experience to have separate backend API layer (shim). The design pattern has its own advantages and disadvantages and you have to use the design pattern by looking at the requirements properly[1][2]. 
+Backends For Frontends is a service design pattern with the core idea of creating separate backend service for specific frontend application.This pattern will allow  each type of user experience to have separate backend service layer (shim). The design pattern has its own advantages and disadvantages and the usage is very much depending on the requirements. 
 
-> In this guide you will learn about using  Backend For Frontend design pattern with Ballerina.
+> In this guide you will learn about using  Backend For Frontends design pattern with Ballerina. 
 
 The following are the sections available in this guide.
 
@@ -14,12 +14,11 @@ The following are the sections available in this guide.
 - [Observability](#observability)
 
 ## What you’ll build
-To understand how BFF works lets take a real world use case of online health care management system. A health care provider have a Desktop Application and a Mobile Application for their users to have better online experience. Once the user login to the Desktop application the home page information shown in Desktop application and Mobile application may vary. Specially the resource limitations in mobile device such as screen size, battery life and data usage cause the mobile application to show minimal viable information to the end user. So the design of the application is suppose to have two different BFFs to support each user experience. Following is the design of the BFF, here the BFF is not implementing anything new, instead it consumes existing downstream services and act as a shim to translate the required information for each user experience. Following diagram demonstrates the use case with two BFF models. 
-
+Let’s take a real world use case of online healthcare management system to understand how BFF works. A health care provider have a Desktop Application and a Mobile Application for their users to have better online experience. Once the user login to the Desktop application the home page information shown in Desktop application and Mobile application may vary. Specially the resource limitations in mobile device such as screen size, battery life and data usage cause the mobile application to show minimal viable information to the end user. Same time the Desktop counterpart can afford more information and do multiple network calls to get required data in place. So the design of the application is suppose to have two different BFFs to support each user experience. Here the BFF layer consumes existing downstream services and act as a shim to translate the required information for each user experience. Following diagram demonstrates the use case with two BFF services. 
  
 ![BFF Design](https://user-images.githubusercontent.com/8995220/43428119-81a10502-9411-11e8-8e24-4d32e0aebd12.jpeg)
 
-In this use case we have two applications called Desktop Application and Mobile Application. For each application there is specific backend service (BFF) called Desktop BFF and Mobile BFF respectively. These BFFs consumes set of downstream services called Appointment Management Service, Medical Record Service, Notification Management Service and Message Management Service. For the purpose of the demonstration Ballerina is used to build both BFF layer and downstream service layer. 
+In this use case we have two applications called Desktop Application and Mobile Application. For each application there is specific backend service (BFF) called Desktop BFF and Mobile BFF respectively. These BFFs consumes set of downstream services called Appointment Management Service, Medical Record Management Service, Notification Management Service and Message Management Service. For the purpose of the demonstration, Ballerina is used to build both BFF layer and downstream service layer. 
 
 ## Prerequisites
 
@@ -27,7 +26,7 @@ In this use case we have two applications called Desktop Application and Mobile 
 - A Text Editor or an IDE
 
 ### Optional requirements
-- Ballerina IDE plugins ([IntelliJ IDEA](https://plugins.jetbrains.com/plugin/9520-ballerina), [VSCode](https://marketplace.visualstudio.com/items?itemName=WSO2.Ballerina), [Atom](https://atom.io/packages/language-ballerina))
+- Ballerina IDE plugins ([IntelliJ IDEA](https://plugins.jetbrains.com/plugin/9520-ballerina), [VSCode](https://marketplace.visualstudio.com/items?itemName=ballerina.ballerina), [Atom](https://atom.io/packages/language-ballerina))
 - [Docker](https://docs.docker.com/engine/installation/)
 - [Kubernetes](https://kubernetes.io/docs/setup/)
 
@@ -62,15 +61,18 @@ backend-for-frontend
       │   ├── mobile_bff_service.bal
       │   └── tests
       │       └── mobile_bff_service_test.bal
-      └── desktop-bff
-          ├── desktop_bff_service.bal
-          └── tests
-              └── desktop_bff_service_test.bal
+      ├── desktop-bff
+      │   ├── desktop_bff_service.bal
+      │   └── tests
+      │       └── desktop_bff_service_test.bal
+      └── sample-data-publisher
+          ├── sample_data_publisher.bal
+          └── sample-data.toml
 ```
 
 - Create the above directories in your local machine and also create empty `.bal` files.
 
-- Then open the terminal and navigate to `service-composition/guide` and run Ballerina project initializing toolkit.
+- Then open the terminal and navigate to `backend-for-frontend/guide` and run Ballerina project initializing toolkit.
 ```bash
    $ ballerina init
 ```
@@ -83,9 +85,7 @@ Appointment Management Service (appointment_mgt_service) is a REST API developed
 
 ##### Skeleton code for appointment_mgt_service.bal
 ```ballerina
-import ballerina/io;
 import ballerina/http;
-import ballerina/log;
 
 endpoint http:Listener listener {
    port: 9092
@@ -122,9 +122,7 @@ Medical Record Management Service (medical_record_mgt_service) is a REST API dev
 
 ##### Skeleton code for medical_record_mgt_service.bal
 ```ballerina
-import ballerina/io;
 import ballerina/http;
-import ballerina/log;
 
 endpoint http:Listener listener {
    port: 9093
@@ -162,10 +160,7 @@ Notification Management Service (notification_mgt_service) is a REST API develop
 
 ##### Skeleton code for notification_mgt_service.bal
 ```ballerina
-import ballerina/io;
-import ballerina/config;
 import ballerina/http;
-import ballerina/log;
 
 endpoint http:Listener listener {
    port: 9094
@@ -207,10 +202,7 @@ Message Management Service (message_mgt_service) is a REST API developed to mana
 ##### Skeleton code for message_mgt_service.bal
 ```ballerina
 
-import ballerina/io;
-import ballerina/config;
 import ballerina/http;
-import ballerina/log;
 
 endpoint http:Listener listener {
    port: 9095
@@ -233,7 +225,6 @@ service<http:Service> message_service bind listener {
 
       // Implementation 
    }
-
 
    @http:ResourceConfig {
        methods: ["GET"],
@@ -261,17 +252,11 @@ Mobile BFF(mobile_bff_service) is a shim used to support Mobile user experience.
 ##### Skeleton code for mobile-bff.bal
 ```ballerina
 
-import ballerina/io;
 import ballerina/http;
-import ballerina/log;
 
 endpoint http:Listener listener {
    port: 9090
 };
-
-// Notification management is done using an in-memory map.
-// Add some sample notifications to 'notificationMap' at startup.
-//map<json> notificationMap;
 
 // Client endpoint to communicate with appointment management service
 endpoint http:Client appointmentEP {
@@ -321,9 +306,7 @@ Desktop BFF(desktop_bff_service) is a shim used to support Desktop application u
 ##### Skeleton code for appointment_mgt_service.bal
 ```ballerina
 
-import ballerina/io;
 import ballerina/http;
-import ballerina/log;
 
 endpoint http:Listener listener {
    port: 9091
