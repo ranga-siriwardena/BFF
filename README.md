@@ -449,15 +449,47 @@ Mobile application can call Mobile BFF to retrieve the user profile using a sing
 Desktop application can call Desktop BFF to render user profile using few API calls. Following are set of CURL commands which can use to invoke Desktop BFF. 
 
 ```bash
-   $ curl -X GET http://localhost:9091/desktop-bff/appointments
+   $ curl -v -X GET http://localhost:9091/desktop-bff/appointments
+
+   Output:
+
+   < HTTP/1.1 200 OK
+   < content-type: application/json
+   < content-length: 286
+   < server: ballerina/0.980.1
+
+   {"Appointments":[{"ID":"APT01","Name":"Family Medicine","Location":"Main Hospital","Time":"2018-08-23, 08.30AM","Description":"Doctor visit for family medicine"},{"ID":"APT02","Name":"Lab Test Appointment","Location":"Main Lab","Time":"2018-08-20, 07.30AM","Description":"Blood test"}]}
+
 ```
 
 ```bash
-   $ curl -X GET http://localhost:9091/desktop-bff/medical-records
+   $ curl -v -X GET http://localhost:9091/desktop-bff/medical-records
+
+   Output:
+   < HTTP/1.1 200 OK
+   < content-type: application/json
+   < content-length: 229
+   < server: ballerina/0.980.1
+
+   {"MedicalRecords":[{"ID":"MED01","Name":"Fasting Glucose Test","Description":"Test Result for Fasting Glucose test is normal"},{"ID":"MED02","Name":"Allergies","Description":"Allergy condition recorded due to Summer allergies"}]}
+
 ```
 
 ```bash
-   $ curl -X GET http://localhost:9091/desktop-bff/alerts
+   $ curl -v -X GET http://localhost:9091/desktop-bff/alerts
+
+   Output:
+   
+   < HTTP/1.1 200 OK
+   < content-type: application/json
+   < content-length: 761
+   < server: ballerina/0.980.1
+
+   {
+   "Notifications":[{"ID":"NOT01","Name":"Lab Test Result Notification","Description":"Test Result of Glucose test is ready"},{"ID":"NOT02","Name":"Flu Vaccine Status","Description":"Flu vaccines due for this year"}],
+   "Messages":[{"ID":"MSG01","From":"Dr. Caroline Caroline","Subject":"Regarding Glucose test result","Content":"Dear member, your test result remain normal","Status":"Read"},{"ID":"MSG02","From":"Dr. Sandra Robert","Subject":"Regarding flu season","Content":"Dear member, We highly recommend you to get the flu vaccination to prevent yourself from flu","Status":"Unread"},{"ID":"MSG03","From":"Dr. Peter Mayr","Subject":"Regarding upcoming blood test","Content":"Dear member, Your Glucose test is scheduled in early next month","Status":"Unread"}]
+   }
+
 ```
 
 
