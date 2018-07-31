@@ -446,5 +446,43 @@ Desktop application can call Desktop BFF to render user profile using few API ca
 ```
 
 
+### Writing unit tests
+
+In Ballerina, the unit test cases should be in the same package inside a folder named as 'tests'. When writing the test functions, follow the convention given below.
+- Test functions should be annotated with `@test:Config`. See the following example.
+```ballerina
+   @test:Config
+   function testResourceAddOrder() {
+```
+
+The source code for this guide contains unit test cases for each resource available in the BFF services implemented above.
+
+To run the unit tests, open your terminal and navigate to `backend-for-frontend/guide`, and run the following command.
+```bash
+   $ ballerina test
+```
+
+> The source code for the tests can be found at [mobile_bff_service_test.bal](https://github.com/ranga-siriwardena/backend-for-frontend/blob/master/guide/mobile-bff/tests/mobile_bff_service_test.bal) and [desktop_bff_service_test.bal](https://github.com/ranga-siriwardena/backend-for-frontend/blob/master/guide/desktop-bff/tests/desktop_bff_service_test.bal).
 
 
+## Deployment
+
+Once you are done with the development, you can deploy the services using any of the methods listed below.
+
+### Deploying locally
+
+- As the first step, you can build Ballerina executable archives (.balx) of the services that we developed above. Navigate to `backend-for-frontend/guide` and run the following command.
+```bash
+   $ ballerina build <Package_Name>
+```
+
+- Once the .balx files are created inside the target folder, you can run them using the following command.
+```bash
+   $ ballerina run target/<Exec_Archive_File_Name>
+```
+
+- The successful execution of a services will show us something similar to the following output.
+```
+   ballerina: initiating service(s) in 'target/mobile-bff.balx'
+   ballerina: started HTTP/WS endpoint 0.0.0.0:9090
+```
