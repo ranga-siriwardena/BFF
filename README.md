@@ -538,6 +538,6 @@ Once you are done with the development, you can deploy the services using any of
 
 You can run the service that we developed above as a Docker container. As Ballerina platform includes [Ballerina_Docker_Extension](https://github.com/ballerinax/docker), which offers native support for running ballerina programs on containers, you just need to put the corresponding Docker annotations on your service code.
 
-Let's see how we can deploy the travel_agency_service we developed above on Docker. When invoking this service make sure that the other three services (airline_reservation, hotel_reservation, and car_rental) are also up and running.
+Let's see how we can deploy the mobile_bff_service and desktop_bff_service we developed above on Docker. When invoking this service make sure that the other four services (appointment_mgt_service, medical_record_mgt_service, notification_mgt_service, and message_mgt_service) are also up and running.
 
-- In our travel_agency_service, we need to import  `ballerinax/docker` and use the annotation `@docker:Config` as shown below to enable Docker image generation during the build time.
+- In our mobile_bff_service, we need to import ballerinax/docker and use the annotation @docker:Config as shown below to enable Docker image generation during the build time.
