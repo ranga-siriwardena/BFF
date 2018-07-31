@@ -541,3 +541,119 @@ You can run the service that we developed above as a Docker container. As Baller
 Let's see how we can deploy the mobile_bff_service and desktop_bff_service we developed above on Docker. When invoking this service make sure that the other four services (appointment_mgt_service, medical_record_mgt_service, notification_mgt_service, and message_mgt_service) are also up and running.
 
 - In our mobile_bff_service, we need to import ballerinax/docker and use the annotation @docker:Config as shown below to enable Docker image generation during the build time.
+
+##### mobile_bff_service.bal
+```ballerina
+import ballerina/http;
+import ballerinax/docker;
+
+@docker:Config {
+   registry:"ballerina.guides.io",
+   name:"mobile_bff_service",
+   tag:"v1.0"
+}
+
+@docker:Expose{}
+endpoint http:Listener listener {
+   port: 9090
+};
+
+// http:Client endpoint definitions to communicate with other services
+
+// RESTful service.
+@http:ServiceConfig { basePath: "/mobile-bff" }
+service<http:Service> mobile_bff_service bind listener {
+....
+```
+
+- In our desktop_bff_service, we need to import ballerinax/docker and use the annotation @docker:Config as shown below to enable Docker image generation during the build time.
+
+##### desktop_bff_service.bal
+```ballerina
+import ballerina/http;
+import ballerinax/docker;
+
+
+@docker:Config {
+    registry:"ballerina.guides.io",
+    name:"desktop_bff_service",
+    tag:"v1.0"
+}
+
+@docker:Expose{}
+endpoint http:Listener listener {
+    port: 9091
+};
+
+// http:Client endpoint definitions to communicate with other services
+
+// RESTful service.
+// RESTful service.
+@http:ServiceConfig { basePath: "/desktop-bff" }
+service<http:Service> desktop_bff_service bind listener {
+....
+```
+
+- Now you can build Ballerina executable archives (.balx) of the services that we developed above, using following commands. This will also create the corresponding Docker images using the Docker annotations that you have configured above. Navigate to backend-for-frontend/guide and run the following command.
+
+```
+   $ballerina build mobile-bff
+
+   Output: 
+   
+   Generating executable
+    ./target/mobile-bff.balx
+	@docker 		 - complete 3/3 
+
+	Run following command to start docker container:
+	docker run -d -p 9090:9090 ballerina.guides.io/mobile_bff_service:v1.0
+```
+
+```
+   $ballerina build desktop-bff
+
+   Output:
+   
+   Generating executable
+    ./target/desktop-bff.balx
+        @docker                  - complete 3/3
+
+        Run following command to start docker container:
+        docker run -d -p 9091:9091 ballerina.guides.io/desktop_bff_service:v1.0
+```
+
+- Once you successfully build the Docker images, you can run them with the `` docker run`` command that is shown in the previous step output section.
+
+```bash
+   $ docker run -d -p 9090:9090 ballerina.guides.io/mobile_bff_service:v1.0
+```
+Here we run the Docker images with flag`` -p <host_port>:<container_port>`` so that we use the host port 9090 and the container port 9090. Therefore you can access the service through the host port.
+
+```bash
+   $ docker run -d -p 9091:9091 ballerina.guides.io/desktop_bff_service:v1.0
+```
+Here we run the Docker images with flag`` -p <host_port>:<container_port>`` so that we use the host port 9091 and the container port 9091. Therefore you can access the service through the host port.
+
+
+- Verify Docker container is running with the use of `` $ docker ps``. The status of the Docker container should be shown as 'Up'.
+
+```bash
+   $ docker ps
+
+   Output: 
+
+   CONTAINER ID        IMAGE                                                 COMMAND                  CREATED             STATUS              PORTS                    NAMES
+   f8bc7bf3a231        ballerina.guides.io/mobile_bff_service:v1.0           "/bin/sh -c 'balleri…"   4 minutes ago       Up 4 minutes        0.0.0.0:9090->9090/tcp   condescending_turing
+   d64d7cea4b0b        ballerina.guides.io/desktop_bff_service:v1.0          "/bin/sh -c 'balleri…"   2 minutes ago       Up 3 minutes        0.0.0.0:9091->9091/tcp   thirsty_lamarr
+```
+- You can access the service using the same curl commands that we've used above.
+
+```bash
+   $ curl -v -X GET http://localhost:9090/mobile-bff/profile
+
+   $ curl -v -X GET http://localhost:9091/desktop-bff/appointments
+
+   $ curl -v -X GET http://localhost:9091/desktop-bff/medical-records
+
+   $ curl -v -X GET http://localhost:9091/desktop-bff/alerts
+```
