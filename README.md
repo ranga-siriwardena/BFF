@@ -656,3 +656,167 @@ service<http:Service> desktop_bff_service bind listener {
 
    $ curl -v -X GET http://localhost:9091/desktop-bff/alerts
 ```
+
+### Deploying on Kubernetes
+
+- You can run the services that we developed above, on Kubernetes. The Ballerina language offers native support for running a ballerina programs on Kubernetes, with the use of Kubernetes annotations that you can include as part of your service code. Also, it will take care of the creation of the Docker images. So you don't need to explicitly create Docker images prior to deploying it on Kubernetes. Refer to [Ballerina_Kubernetes_Extension](https://github.com/ballerinax/kubernetes) for more details and samples on Kubernetes deployment with Ballerina. You can also find details on using Minikube to deploy Ballerina programs.
+
+- Let's now see how we can deploy our BFFs on Kubernetes. When invoking this service make sure that the other four services (appointment_mgt_service, medical_record_mgt_service, notification_mgt_service, and message_mgt_service) are also up and running.
+
+- First we need to import `ballerinax/kubernetes` and use `@kubernetes` annotations as shown below to enable kubernetes deployment for the services we developed above.
+
+> NOTE: You can use Minikube to try this out locally.
+
+##### Skeleton code for mobile_bff_service.bal
+```ballerina
+import ballerina/http;
+import ballerinax/kubernetes;
+
+@kubernetes:Ingress {
+  hostname:"ballerina.guides.io",
+  name:"ballerina-guides-mobile-bff-service",
+  path:"/"
+}
+
+@kubernetes:Service {
+  serviceType:"NodePort",
+  name:"ballerina-guides-mobile-bff-service"
+}
+
+@kubernetes:Deployment {
+  image:"ballerina.guides.io/mobile_bff_service:v1.0",
+  name:"ballerina-guides-mobile-bff-service"
+}
+
+endpoint http:Listener listener {
+   port: 9090
+};
+
+// http:Client endpoint definitions to communicate with other services
+
+// RESTful service.
+@http:ServiceConfig { basePath: "/mobile-bff" }
+service<http:Service> mobile_bff_service bind listener {
+....
+```
+
+##### Skeleton code for desktop_bff_service.bal
+```ballerina
+import ballerina/http;
+import ballerinax/kubernetes;
+
+@kubernetes:Ingress {
+  hostname:"ballerina.guides.io",
+  name:"ballerina-guides-desktop-bff-service",
+  path:"/"
+}
+
+@kubernetes:Service {
+  serviceType:"NodePort",
+  name:"ballerina-guides-desktop-bff-service"
+}
+
+@kubernetes:Deployment {
+  image:"ballerina.guides.io/desktop_bff_service:v1.0",
+  name:"ballerina-guides-desktop-bff-service"
+}
+
+endpoint http:Listener listener {
+    port: 9091
+};
+
+// http:Client endpoint definitions to communicate with other services
+
+// RESTful service.
+// RESTful service.
+@http:ServiceConfig { basePath: "/desktop-bff" }
+service<http:Service> desktop_bff_service bind listener {
+....
+```
+
+- Here we have used ``  @kubernetes:Deployment `` to specify the Docker image name that will be created as part of building this service.
+- We have also specified `` @kubernetes:Service `` so that it will create a Kubernetes service, which will expose the Ballerina service that is running on a Pod.
+- In addition we have used `` @kubernetes:Ingress ``, which is the external interface to access your service (with path `` /`` and host name ``ballerina.guides.io``)
+
+If you are using Minikube, you need to set a couple of additional attributes to the `@kubernetes:Deployment` annotation.
+- `dockerCertPath` - The path to the certificates directory of Minikube (e.g., `/home/ballerina/.minikube/certs`).
+- `dockerHost` - The host for the running cluster (e.g., `tcp://192.168.99.100:2376`). The IP address of the cluster can be found by running the `minikube ip` command.
+
+- Now you can build a Ballerina executable archive (.balx) of the service that we developed above, using the following command. This will also create the corresponding Docker image and the Kubernetes artifacts using the Kubernetes annotations that you have configured above.
+
+```
+   $ ballerina build mobile-bff
+
+   Output: 
+     Run following command to deploy kubernetes artifacts: 
+     kubectl apply -f ./target/kubernetes/mobile-bff
+```
+
+```
+   $ ballerina build desktop-bff
+
+   Output:
+     Run following command to deploy kubernetes artifacts:
+     kubectl apply -f ./target/kubernetes/desktop-bff
+```
+
+- You can verify that the Docker image that we specified in `` @kubernetes:Deployment `` is created, by using `` docker images ``.
+- Also the Kubernetes artifacts related our service, will be generated under `` ./target/kubernetes``.
+- Now you can create the Kubernetes deployment using:
+
+```bash
+   $ kubectl apply -f ./target/kubernetes/mobile-bff
+
+   Output: 
+
+   deployment.extensions "ballerina-guides-mobile-bff-service" configured
+   ingress.extensions "ballerina-guides-mobile-bff-service" configured
+   service "ballerina-guides-mobile-bff-service" configured
+```
+
+```bash
+   $ kubectl apply -f ./target/kubernetes/desktop-bff
+
+   Output: 
+
+   deployment.extensions "ballerina-guides-desktop-bff-service" configured
+   ingress.extensions "ballerina-guides-desktop-bff-service" configured
+   service "ballerina-guides-desktop-bff-service" configured
+```
+
+- You can verify Kubernetes deployment, service and ingress are running properly, by using following Kubernetes commands.
+
+```bash
+   $ kubectl get service
+   $ kubectl get deploy
+   $ kubectl get pods
+   $ kubectl get ingress
+```
+
+- If everything is successfully deployed, you can invoke the service either via Node port or ingress.
+
+Node Port:
+```bash
+   $ curl -v -X GET http://localhost:<Node_Port>/mobile-bff/profile
+```
+```bash
+   $ curl -v -X GET http://localhost:<Node_Port>/desktop-bff/alerts
+```
+
+If you are using Minikube, you should use the IP address of the Minikube cluster obtained by running the `minikube ip` command. The port should be the node port given when running the `kubectl get services` command.
+
+Ingress:
+
+Add `/etc/hosts` entry to match hostname. For Minikube, the IP address should be the IP address of the cluster.
+```
+   127.0.0.1 ballerina.guides.io
+```
+
+Access the service
+```bash
+   $ curl -v -X GET http://ballerina.guides.io/mobile-bff/profile
+```
+
+```bash
+   $ curl -v -X GET http://ballerina.guides.io/desktop-bff/alerts
+```
