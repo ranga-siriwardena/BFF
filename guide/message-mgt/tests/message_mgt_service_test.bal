@@ -1,7 +1,7 @@
 import ballerina/test;
 import ballerina/http;
 
-// Client endpoint to communicate with appointment management service
+// Client endpoint to communicate with message management service
 endpoint http:Client clientEP {
     url: "http://localhost:9095/message-mgt"
 };

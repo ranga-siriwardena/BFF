@@ -1,9 +1,12 @@
 import ballerina/test;
 import ballerina/http;
+import ballerina/io;
 
+// Client endpoint to communicate with desktop-bff service
 endpoint http:Client clientEP {
     url:"http://localhost:9091/desktop-bff"
 };
+
 
 @test:Config
 // Function to test POST resource 'getAlerts'.
@@ -12,6 +15,11 @@ function testResourceGetAlerts() {
     // Expected response code is 200.
     test:assertEquals(response.statusCode, 200,
         msg = "getAlerts resource did not respond with expected response code!");
+
+    json resPayload = check response.getJsonPayload();
+    io:println("########################");
+    io:println(resPayload);
+    io:println("########################");
 
 }
 
