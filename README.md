@@ -499,7 +499,7 @@ In Ballerina, the unit test cases should be in the same package inside a folder 
 - Test functions should be annotated with `@test:Config`. See the following example.
 ```ballerina
    @test:Config
-   function testResourceAddOrder() {
+   function testResourceGetUserProfile() {
 ```
 
 The source code for this guide contains unit test cases for each resource available in the BFF services implemented above.
