@@ -824,7 +824,7 @@ Access the service
 
 ## Observability
 Ballerina is by default observable. Meaning you can easily observe your services, resources, etc.
-However, observability is disabled by default via configuration. Observability can be enabled by adding following configurations to `ballerina.conf` file and starting the ballerina service using it. A sample configuration file can be found in `service-composition/guide/mobile-bff/`.
+However, observability is disabled by default via configuration. Observability can be enabled by adding following configurations to `ballerina.conf` file and starting the ballerina service using it. A sample configuration file can be found in `backend-for-frontend/guide/mobile-bff/`.
 
 ```ballerina
 [b7a.observability]
