@@ -588,7 +588,6 @@ endpoint http:Listener listener {
 // http:Client endpoint definitions to communicate with other services
 
 // RESTful service.
-// RESTful service.
 @http:ServiceConfig { basePath: "/desktop-bff" }
 service<http:Service> desktop_bff_service bind listener {
 ....

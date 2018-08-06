@@ -1,33 +1,33 @@
 import ballerina/http;
 import ballerina/log;
-//import ballerinax/docker;
-import ballerinax/kubernetes;
+import ballerinax/docker;
+//import ballerinax/kubernetes;
 
-@kubernetes:Ingress {
-    hostname:"ballerina.guides.io",
-    name:"ballerina-guides-mobile-bff-service",
-    path:"/"
-}
-
-@kubernetes:Service {
-    serviceType:"NodePort",
-    name:"ballerina-guides-mobile-bff-service"
-}
-
-@kubernetes:Deployment {
-    image:"ballerina.guides.io/mobile_bff_service:v1.0",
-    name:"ballerina-guides-mobile-bff-service",
-    dockerCertPath:"/Users/ranga/.minikube/certs",
-    dockerHost:"tcp://192.168.99.100:2376"
-}
-
-//@docker:Config {
-//    registry:"ballerina.guides.io",
-//    name:"mobile_bff_service",
-//    tag:"v1.0"
+//@kubernetes:Ingress {
+//    hostname:"ballerina.guides.io",
+//    name:"ballerina-guides-mobile-bff-service",
+//    path:"/"
+//}
+//
+//@kubernetes:Service {
+//    serviceType:"NodePort",
+//    name:"ballerina-guides-mobile-bff-service"
+//}
+//
+//@kubernetes:Deployment {
+//    image:"ballerina.guides.io/mobile_bff_service:v1.0",
+//    name:"ballerina-guides-mobile-bff-service",
+//    dockerCertPath:"/Users/ranga/.minikube/certs",
+//    dockerHost:"tcp://192.168.99.100:2376"
 //}
 
-//@docker:Expose{}
+@docker:Config {
+    registry:"ballerina.guides.io",
+    name:"mobile_bff_service",
+    tag:"v1.0"
+}
+
+@docker:Expose{}
 endpoint http:Listener listener {
     port: 9090
 };
