@@ -718,11 +718,11 @@ service<http:Service> desktop_bff_service bind listener {
 - Once you successfully build the Docker images, you can run them with the `` docker run`` command that is shown in the previous step output section. Here we run the Docker images with flag`` -p <host_port>:<container_port>``. So that we use the host port 9090 and the container port 9090 for mobile_bff_service and we use the host port 9091 and the container port 9091 for desktop_bff_service. Therefore you can access the services through the host port.
 
 ```bash
-   $ docker run -d -p 9090:9090 --name mobile-bff-container --link appointment-mgt-container medical-record-mgt-container  message-mgt-container ballerina.guides.io/mobile_bff_service:v1.0
+   $ docker run -d -p 9090:9090 --name mobile-bff-container --link appointment-mgt-container --link medical-record-mgt-container  --link message-mgt-container ballerina.guides.io/mobile_bff_service:v1.0
 ```
 
 ```bash
-   $ docker run -d -p 9091:9091 --name desktop-bff-container --link appointment-mgt-container medical-record-mgt-container  notification-mgt-container message-mgt-container ballerina.guides.io/desktop_bff_service:v1.0
+   $ docker run -d -p 9091:9091 --name desktop-bff-container --link appointment-mgt-container --link medical-record-mgt-container  --link notification-mgt-container --link message-mgt-container ballerina.guides.io/desktop_bff_service:v1.0
 ```
 
 
@@ -733,10 +733,22 @@ service<http:Service> desktop_bff_service bind listener {
 
    Output: 
 
-   CONTAINER ID        IMAGE                                                 COMMAND                  CREATED             STATUS              PORTS                    NAMES
-   f8bc7bf3a231        ballerina.guides.io/mobile_bff_service:v1.0           "/bin/sh -c 'balleri…"   4 minutes ago       Up 4 minutes        0.0.0.0:9090->9090/tcp   condescending_turing
-   d64d7cea4b0b        ballerina.guides.io/desktop_bff_service:v1.0          "/bin/sh -c 'balleri…"   2 minutes ago       Up 3 minutes        0.0.0.0:9091->9091/tcp   thirsty_lamarr
+   CONTAINER ID        IMAGE                                                 COMMAND                  CREATED              STATUS              PORTS                    NAMES
+   4f85a06c1556        ballerina.guides.io/desktop_bff_service:v1.0          "/bin/sh -c 'balleri…"   3 seconds ago        Up 2 seconds        0.0.0.0:9091->9091/tcp   desktop-bff-container
+   4e309c368da9        ballerina.guides.io/mobile_bff_service:v1.0           "/bin/sh -c 'balleri…"   About a minute ago   Up About a minute   0.0.0.0:9090->9090/tcp   mobile-bff-container
+   6c531a26073b        ballerina.guides.io/message_mgt_service:v1.0          "/bin/sh -c 'balleri…"   4 minutes ago        Up 4 minutes        0.0.0.0:9095->9095/tcp   message-mgt-container
+   a59928647216        ballerina.guides.io/notification_mgt_service:v1.0     "/bin/sh -c 'balleri…"   4 minutes ago        Up 4 minutes        0.0.0.0:9094->9094/tcp   notification-mgt-container
+   afc7548a1548        ballerina.guides.io/medical_record_mgt_service:v1.0   "/bin/sh -c 'balleri…"   4 minutes ago        Up 4 minutes        0.0.0.0:9093->9093/tcp   medical-record-mgt-container
+   0df660f601a2        ballerina.guides.io/appointment_mgt_service:v1.0      "/bin/sh -c 'balleri…"   4 minutes ago        Up 4 minutes        0.0.0.0:9092->9092/tcp   appointment-mgt-container
+
 ```
+
+- Now we can publish some data to downstream services so that we consume from BFF layer.  
+
+```bash
+   $ ballerina run sample-data-publisher
+```
+
 - You can access the service using the same curl commands that we've used above.
 
 ```bash
