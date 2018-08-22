@@ -718,11 +718,11 @@ service<http:Service> desktop_bff_service bind listener {
 - Once you successfully build the Docker images, you can run them with the `` docker run`` command that is shown in the previous step output section. Here we run the Docker images with flag`` -p <host_port>:<container_port>``. So that we use the host port 9090 and the container port 9090 for mobile_bff_service and we use the host port 9091 and the container port 9091 for desktop_bff_service. Therefore you can access the services through the host port.
 
 ```bash
-   $ docker run -d -p 9090:9090 ballerina.guides.io/mobile_bff_service:v1.0
+   $ docker run -d -p 9090:9090 --name mobile-bff-container --link appointment-mgt-container medical-record-mgt-container  message-mgt-container ballerina.guides.io/mobile_bff_service:v1.0
 ```
 
 ```bash
-   $ docker run -d -p 9091:9091 ballerina.guides.io/desktop_bff_service:v1.0
+   $ docker run -d -p 9091:9091 --name desktop-bff-container --link appointment-mgt-container medical-record-mgt-container  notification-mgt-container message-mgt-container ballerina.guides.io/desktop_bff_service:v1.0
 ```
 
 
