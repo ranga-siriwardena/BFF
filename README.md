@@ -539,7 +539,68 @@ Once you are done with the development, you can deploy the services using any of
 
 You can run the service that we developed above as a Docker container. As Ballerina platform includes [Ballerina_Docker_Extension](https://github.com/ballerinax/docker), which offers native support for running ballerina programs on containers, you just need to put the corresponding Docker annotations on your service code.
 
-Let's see how we can deploy the mobile_bff_service and desktop_bff_service we developed above on Docker. When invoking this service make sure that the other four services (appointment_mgt_service, medical_record_mgt_service, notification_mgt_service, and message_mgt_service) are also up and running.
+Let’s deploy the four downstream services to Docker first. 
+
+ - In our downstream services(appointment_mgt_service, medical_record_mgt_service, notification_mgt_service, and message_mgt_service) we need to import ballerinax/docker and use the annotation @docker:Config as shown below to enable Docker image generation during the build time. We will use appointment_mgt_service as a example here and you need to follow the same step for all four services. 
+
+##### Skeleton code for appointment_mgt_service.bal
+```ballerina
+import ballerina/http;
+import ballerinax/docker;
+
+@docker:Config {
+    registry:"ballerina.guides.io",
+    name:"appointment_mgt_service",
+    tag:"v1.0"
+}
+
+@docker:Expose{}
+endpoint http:Listener listener {
+    port: 9092
+};
+
+map<json> appointmentMap;
+
+
+// RESTful service.
+@http:ServiceConfig { basePath: "/appointment-mgt" }
+service<http:Service> appointment_mgt_service bind listener {
+....
+```
+
+Now you can build Ballerina executable archives (.balx) of the services that we developed above, using following commands. This will also create the corresponding Docker images using the Docker annotations that you have configured above. Navigate to backend-for-frontend/guide and run the following command.
+
+```
+   $ballerina build appointment-mgt
+
+   Output:
+
+   Generating executable
+    ./target/appointment-mgt.balx
+	@docker 		 - complete 3/3 
+
+	Run following command to start docker container:
+	docker run -d -p 9092:9092 ballerina.guides.io/appointment_mgt_service:v1.0
+```
+
+- Once you successfully build the Docker images, you can run them with the `` docker run`` command that is shown in the previous step output section. Here we run the Docker images with flag`` -p <host_port>:<container_port>`` argument to map host port with container port which will allow you to access the services through the host port. Also we can use ``–name`` argument to define container name which will later allow BFF Docker containers to communicate with downstream services. Following are the sample commands to start all services in Docker. 
+
+
+```bash
+   $ docker run -d -p 9092:9092 --name appointment-mgt-container ballerina.guides.io/appointment_mgt_service:v1.0
+```
+```bash
+   $ docker run -d -p 9093:9093 --name medical-record-mgt-container ballerina.guides.io/medical_record_mgt_service:v1.0
+```
+```bash
+   $ docker run -d -p 9094:9094 --name notification-mgt-container ballerina.guides.io/notification_mgt_service:v1.0
+```
+```bash
+   $ docker run -d -p 9095:9095 --name message-mgt-container ballerina.guides.io/message_mgt_service:v1.0
+```
+
+
+Let's see how we can deploy the mobile_bff_service and desktop_bff_service we developed above on Docker. When invoking this service make sure that the other four services (appointment_mgt_service, medical_record_mgt_service, notification_mgt_service, and message_mgt_service) are also up and running in Docker. Also we have to change the endpoint URLs as per the Docker container names which is given when starting downstream services in previous step. 
 
 
 - In our mobile_bff_service and desktop_bff_service, we need to import ballerinax/docker and use the annotation @docker:Config as shown below to enable Docker image generation during the build time.
@@ -560,7 +621,20 @@ endpoint http:Listener listener {
    port: 9090
 };
 
-// http:Client endpoint definitions to communicate with other services
+// Client endpoint to communicate with appointment management service
+endpoint http:Client appointmentEP {
+    url: "http://appointment-mgt-container:9092/appointment-mgt"
+};
+
+// Client endpoint to communicate with medical record service
+endpoint http:Client medicalRecordEP {
+    url: "http://medical-record-mgt-container:9093/medical_records"
+};
+
+// Client endpoint to communicate with message management service
+endpoint http:Client messageEP {
+    url: "http://message-mgt-container:9095/message-mgt"
+};
 
 // RESTful service.
 @http:ServiceConfig { basePath: "/mobile-bff" }
@@ -585,7 +659,25 @@ endpoint http:Listener listener {
     port: 9091
 };
 
-// http:Client endpoint definitions to communicate with other services
+// Client endpoint to communicate with appointment management service
+endpoint http:Client appointmentEP {
+    url: "http://appointment-mgt-container:9092/appointment-mgt"
+};
+
+// Client endpoint to communicate with medical record service
+endpoint http:Client medicalRecordEP {
+    url: "http://medical-record-mgt-container:9093/medical_records"
+};
+
+// Client endpoint to communicate with notification management service
+endpoint http:Client notificationEP {
+    url: "http://notification-mgt-container:9094/notification-mgt"
+};
+
+// Client endpoint to communicate with message management service
+endpoint http:Client messageEP {
+    url: "http://message-mgt-container:9095/message-mgt"
+};
 
 // RESTful service.
 @http:ServiceConfig { basePath: "/desktop-bff" }

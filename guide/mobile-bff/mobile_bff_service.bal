@@ -35,7 +35,7 @@ endpoint http:Listener listener {
 
 // Client endpoint to communicate with appointment management service
 endpoint http:Client appointmentEP {
-    url: "http://localhost:9092/appointment-mgt"
+    url: "http://appointment_mgt_service:9092/appointment-mgt"
 };
 
 // Client endpoint to communicate with medical record service
