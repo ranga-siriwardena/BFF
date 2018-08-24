@@ -689,12 +689,12 @@ service<http:Service> desktop_bff_service bind listener {
 - Now you can build Ballerina executable archives (.balx) of the services that we developed above, using following commands. This will also create the corresponding Docker images using the Docker annotations that you have configured above. Navigate to backend-for-frontend/guide and run the following command.
 
 ```
-   $ballerina build mobile-bff
+   $ballerina build mobile_bff
 
    Output: 
    
    Generating executable
-    ./target/mobile-bff.balx
+    ./target/mobile_bff.balx
 	@docker 		 - complete 3/3 
 
 	Run following command to start docker container:
@@ -702,12 +702,12 @@ service<http:Service> desktop_bff_service bind listener {
 ```
 
 ```
-   $ballerina build desktop-bff
+   $ballerina build desktop_bff
 
    Output:
    
    Generating executable
-    ./target/desktop-bff.balx
+    ./target/desktop_bff.balx
         @docker                  - complete 3/3
 
         Run following command to start docker container:
