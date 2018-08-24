@@ -746,7 +746,7 @@ service<http:Service> desktop_bff_service bind listener {
 - Now we can publish some data to downstream services so that we consume from BFF layer.  
 
 ```bash
-   $ ballerina run sample-data-publisher
+   $ ballerina run sample_data_publisher
 ```
 
 - You can access the service using the same curl commands that we've used above.
