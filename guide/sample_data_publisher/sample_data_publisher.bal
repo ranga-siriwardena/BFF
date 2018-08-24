@@ -10,7 +10,7 @@ endpoint http:Client appointmentEP {
 
 // Client endpoint to communicate with medical record service
 endpoint http:Client medicalRecordEP {
-    url: "http://localhost:9093/medical_records"
+    url: "http://localhost:9093/medical-records"
 };
 
 // Client endpoint to communicate with notification management service

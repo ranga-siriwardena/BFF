@@ -3,7 +3,7 @@ import ballerina/http;
 
 // Client endpoint to communicate with medical record management service
 endpoint http:Client clientEP {
-    url: "http://localhost:9093/medical_records"
+    url: "http://localhost:9093/medical-records"
 };
 
 @test:Config
