@@ -20,7 +20,7 @@ map<json> medicalRecordMap;
 
 
 // RESTful service.
-@http:ServiceConfig { basePath: "/medical_records" }
+@http:ServiceConfig { basePath: "/medical-records" }
 service<http:Service> medical_record_mgt_service bind listener {
 
     @http:ResourceConfig {
