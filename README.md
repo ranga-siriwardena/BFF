@@ -944,10 +944,10 @@ enabled=true
 To start the ballerina services using the configuration file, run the following command
 
 ```
-   $ ballerina run --config mobile_bff/ballerina.conf mobile-bff
+   $ ballerina run --config mobile_bff/ballerina.conf mobile_bff
 ```
 ```
-   $ ballerina run --config desktop_bff/ballerina.conf desktop-bff
+   $ ballerina run --config desktop_bff/ballerina.conf desktop_bff
 ```
 NOTE: The above configuration is the minimum configuration needed to enable tracing and metrics. With these configurations default values are load as the other configuration parameters of metrics and tracing.
 
