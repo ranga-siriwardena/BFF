@@ -531,7 +531,7 @@ Once you are done with the development, you can deploy the services using any of
 
 - The successful execution of a services will show us something similar to the following output.
 ```
-   ballerina: initiating service(s) in 'target/mobile-bff.balx'
+   ballerina: initiating service(s) in 'target/<Exec_Archive_File_Name>'
    ballerina: started HTTP/WS endpoint 0.0.0.0:9090
 ```
 
@@ -849,19 +849,19 @@ If you are using Minikube, you need to set a couple of additional attributes to 
 - Now you can build a Ballerina executable archive (.balx) of the service that we developed above, using the following command. This will also create the corresponding Docker image and the Kubernetes artifacts using the Kubernetes annotations that you have configured above.
 
 ```
-   $ ballerina build mobile-bff
+   $ ballerina build mobile_bff
 
    Output: 
      Run following command to deploy kubernetes artifacts: 
-     kubectl apply -f ./target/kubernetes/mobile-bff
+     kubectl apply -f ./target/kubernetes/mobile_bff
 ```
 
 ```
-   $ ballerina build desktop-bff
+   $ ballerina build desktop_bff
 
    Output:
      Run following command to deploy kubernetes artifacts:
-     kubectl apply -f ./target/kubernetes/desktop-bff
+     kubectl apply -f ./target/kubernetes/desktop_bff
 ```
 
 - You can verify that the Docker image that we specified in `` @kubernetes:Deployment `` is created, by using `` docker images ``.
@@ -869,7 +869,7 @@ If you are using Minikube, you need to set a couple of additional attributes to 
 - Now you can create the Kubernetes deployment using:
 
 ```bash
-   $ kubectl apply -f ./target/kubernetes/mobile-bff
+   $ kubectl apply -f ./target/kubernetes/mobile_bff
 
    Output: 
 
@@ -879,7 +879,7 @@ If you are using Minikube, you need to set a couple of additional attributes to 
 ```
 
 ```bash
-   $ kubectl apply -f ./target/kubernetes/desktop-bff
+   $ kubectl apply -f ./target/kubernetes/desktop_bff
 
    Output: 
 
@@ -927,7 +927,7 @@ Access the service
 
 ## Observability
 Ballerina is by default observable. Meaning you can easily observe your services, resources, etc.
-However, observability is disabled by default via configuration. Observability can be enabled by adding following configurations to `ballerina.conf` file and starting the ballerina service using it. A sample configuration file can be found in `backend-for-frontend/guide/mobile-bff/`.
+However, observability is disabled by default via configuration. Observability can be enabled by adding following configurations to `ballerina.conf` file and starting the ballerina service using it. A sample configuration file can be found in `backend-for-frontend/guide/mobile_bff/`.
 
 ```ballerina
 [b7a.observability]
@@ -944,10 +944,10 @@ enabled=true
 To start the ballerina services using the configuration file, run the following command
 
 ```
-   $ ballerina run --config mobile-bff/ballerina.conf mobile-bff
+   $ ballerina run --config mobile_bff/ballerina.conf mobile-bff
 ```
 ```
-   $ ballerina run --config desktop-bff/ballerina.conf desktop-bff
+   $ ballerina run --config desktop_bff/ballerina.conf desktop-bff
 ```
 NOTE: The above configuration is the minimum configuration needed to enable tracing and metrics. With these configurations default values are load as the other configuration parameters of metrics and tracing.
 
@@ -982,10 +982,10 @@ Follow the following steps to use tracing with Ballerina.
 
 - Navigate to `backend-for-frontend/guide` and run the `mobile_bff_service` and `desktop_bff_service` using the following command
 ```
-   $ ballerina run --config mobile-bff/ballerina.conf mobile-bff
+   $ ballerina run --config mobile_bff/ballerina.conf mobile_bff
 ```
 ```
-   $ ballerina run --config desktop-bff/ballerina.conf desktop-bff
+   $ ballerina run --config desktop_bff/ballerina.conf desktop_bff
 ```
 
 - Observe the tracing using Jaeger UI using following URL
@@ -1031,10 +1031,10 @@ Follow the below steps to set up Prometheus and view metrics for BFF services.
 
 - Navigate to `backend-for-frontend/guide` and run the `mobile_bff_service` and `desktop_bff_service` using following commands.
 ```
-  $ ballerina run --config mobile-bff/ballerina.conf mobile-bff
+  $ ballerina run --config mobile_bff/ballerina.conf mobile_bff
 ```
 ```
-  $ ballerina run --config desktop-bff/ballerina.conf desktop-bff
+  $ ballerina run --config desktop_bff/ballerina.conf desktop_bff
 ```
 
 
@@ -1055,7 +1055,7 @@ Ballerina has a log package for logging to the console. You can import ballerina
 
 - Start the Ballerina Service with the following command from `backend-for-frontend/guide`
 ```
-   $ nohup ballerina run mobile-bff/ &>> ballerina.log&
+   $ nohup ballerina run mobile_bff/ &>> ballerina.log&
 ```
    NOTE: This will write the console log to the `ballerina.log` file in the `backend-for-frontend/guide` directory
 
