@@ -42,33 +42,33 @@ Ballerina is a complete programming language that supports custom project struct
 ```
 backend-for-frontend
   └── guide
-      ├── appointment-mgt
+      ├── appointment_mgt
       │   ├── appointment_mgt_service.bal
       │   └── tests
       │       └── appointment_mgt_service_test.bal
-      ├── medical-record-mgt
+      ├── medical_record_mgt
       │   ├── medical_record_mgt_service.bal
       │   └── tests
       │       └── medical_record_mgt_service_test.bal
-      ├── notification-mgt
+      ├── notification_mgt
       │   ├── notification_mgt_service.bal
       │   └── tests
       │       └── notification_mgt_service_test.bal
-      ├── message-mgt
+      ├── message_mgt
       │   ├── message_mgt_service.bal
       │   └── tests
       │       └── message_mgt_service_test.bal
-      ├── mobile-bff
+      ├── mobile_bff
       │   ├── mobile_bff_service.bal
       │   └── tests
       │       └── mobile_bff_service_test.bal
-      ├── desktop-bff
+      ├── desktop_bff
       │   ├── desktop_bff_service.bal
       │   └── tests
       │       └── desktop_bff_service_test.bal
-      └── sample-data-publisher
+      └── sample_data_publisher
           ├── sample_data_publisher.bal
-          └── sample-data.toml
+          └── sample_data.toml
 ```
 
 - Create the above directories in your local machine and also create empty `.bal` files.
@@ -134,7 +134,7 @@ endpoint http:Listener listener {
 map<json> medicalRecordMap;
 
 // RESTful service.
-@http:ServiceConfig { basePath: "/medical_records" }
+@http:ServiceConfig { basePath: "/medical-records" }
 service<http:Service> medical_record_service bind listener {
 
    @http:ResourceConfig {
@@ -266,7 +266,7 @@ endpoint http:Client appointmentEP {
 
 // Client endpoint to communicate with medical record service
 endpoint http:Client medicalRecordEP {
-   url: "http://localhost:9093/medical_records"
+   url: "http://localhost:9093/medical-records"
 };
 
 // Client endpoint to communicate with message management service
@@ -320,7 +320,7 @@ endpoint http:Client appointmentEP {
 
 // Client endpoint to communicate with medical record service
 endpoint http:Client medicalRecordEP {
-   url: "http://localhost:9093/medical_records"
+   url: "http://localhost:9093/medical-records"
 };
 
 // Client endpoint to communicate with notification management service
@@ -392,36 +392,36 @@ service<http:Service> desktop_bff_service bind listener {
 Navigate to BFF/guide and run following commands in separate terminals to start all downstream services. These commands will start appointment_mgt_service, appointment_mgt_service, notification_mgt_service and notification_mgt_service on ports 9092, 9093, 9094 and 9095 respectively. 
 
 ```bash
-   $ ballerina run appointment-mgt 
+   $ ballerina run appointment_mgt 
 ```
 
 ```bash
-   $ ballerina run medical-record-mgt
+   $ ballerina run medical_record_mgt
 ```
 
 ```bash
-   $ ballerina run notification-mgt
+   $ ballerina run notification_mgt
 ```
 
 ```bash
-   $ ballerina run message-mgt
+   $ ballerina run message_mgt
 ```
 
 Similarly run bellow commands to start the BFF layer services. These commands will start mobile_bff_service and desktop_bff_service on ports 9090 and 9091 respectively. 
 
 
 ```bash
-   $ ballerina run mobile-bff 
+   $ ballerina run mobile_bff 
 ```
 
 ```bash
-   $ ballerina run desktop-bff
+   $ ballerina run desktop_bff
 ```
 
 For demonstration purpose let’s add some data to downstream services. Use following command to load some appointments, medical records, notifications and messages to the services. 
 
 ```bash
-   $ ballerina run sample-data-publisher --config sample-data-publisher/sample_data.toml 
+   $ ballerina run sample_data_publisher --config sample_data_publisher/sample_data.toml 
 ```
 
 Now we have some data loaded into the downstream services hence we can call the BFF layer to retrieve the data as per the requirement. 
@@ -571,12 +571,12 @@ service<http:Service> appointment_mgt_service bind listener {
 Now you can build Ballerina executable archives (.balx) of the services that we developed above, using following commands. This will also create the corresponding Docker images using the Docker annotations that you have configured above. Navigate to backend-for-frontend/guide and run the following command.
 
 ```
-   $ballerina build appointment-mgt
+   $ballerina build appointment_mgt
 
    Output:
 
    Generating executable
-    ./target/appointment-mgt.balx
+    ./target/appointment_mgt.balx
 	@docker 		 - complete 3/3 
 
 	Run following command to start docker container:
@@ -628,7 +628,7 @@ endpoint http:Client appointmentEP {
 
 // Client endpoint to communicate with medical record service
 endpoint http:Client medicalRecordEP {
-    url: "http://medical-record-mgt-container:9093/medical_records"
+    url: "http://medical-record-mgt-container:9093/medical-records"
 };
 
 // Client endpoint to communicate with message management service
@@ -666,7 +666,7 @@ endpoint http:Client appointmentEP {
 
 // Client endpoint to communicate with medical record service
 endpoint http:Client medicalRecordEP {
-    url: "http://medical-record-mgt-container:9093/medical_records"
+    url: "http://medical-record-mgt-container:9093/medical-records"
 };
 
 // Client endpoint to communicate with notification management service
