@@ -18,7 +18,7 @@ Let’s take a real world use case of online healthcare management system to und
 
 ![BFF Design](images/bff_architecture.jpeg "BFF Design")
 
-In this use case we have two applications called Desktop Application and Mobile Application. For each application there is specific backend service (BFF) called Desktop BFF and Mobile BFF respectively. These BFFs consumes set of downstream services called Appointment Management Service, Medical Record Management Service, Notification Management Service and Message Management Service. For the purpose of the demonstration, Ballerina is used to build both BFF layer and downstream service layer. 
+In this use case we have two applications called Desktop Application and Mobile Application. For each application, there is specific backend service (BFF) called Desktop BFF and Mobile BFF respectively. These BFFs consumes set of downstream services called Appointment Management Service, Medical Record Management Service, Notification Management Service and Message Management Service.  In this guide, Ballerina is used to build both BFF layer and downstream service layer.
 
 ## Prerequisites
 
