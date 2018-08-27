@@ -245,7 +245,7 @@ service<http:Service> message_service bind listener {
 
 ```
 
-Let’s look into the BFF implementation now. 
+Now let’s move into the key implementation of this guide which is the BFF implementation. 
 
 Mobile BFF(mobile_bff_service) is a shim used to support Mobile user experience. In this use case, when loading mobile application home page it calls a single resource in Mobile BFF and retrieve appointments, medical records and messages. Also the mobile apps having different method of sending notifications hence home page loading does not need to involve notification management service.  This will reduce number of backend calls and help to load the home pages in much efficient way. 
 
