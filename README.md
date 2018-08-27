@@ -1,6 +1,6 @@
 # Backend For Frontend
 
-Backend For Frontend(BFF) is a service design pattern with the core idea of creating separate backend service for specific frontend application.This pattern will allow  each type of user experience to have separate backend service layer(shim). The design pattern has its own advantages and disadvantages and the usage is very much depending on the use case and the requirements [[1](https://samnewman.io/patterns/architectural/bff/)] ,[[2](http://philcalcado.com/2015/09/18/the_back_end_for_front_end_pattern_bff.html)]. 
+Backend For Frontend(BFF) is a service design pattern with the core idea of creating separate backend service for specific frontend application. This pattern will allow  each type of user experience to have separate backend service layer(shim). The design pattern has its own advantages and disadvantages and the usage is very much depending on the use case and the requirements [[1](https://samnewman.io/patterns/architectural/bff/)] ,[[2](http://philcalcado.com/2015/09/18/the_back_end_for_front_end_pattern_bff.html)]. 
 
 > In this guide you will learn about using  Backend For Frontend(BFF) design pattern with Ballerina. 
 
