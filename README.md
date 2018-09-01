@@ -976,7 +976,7 @@ Follow the following steps to use tracing with Ballerina.
 - Run Jaeger Docker image using the following command
 ```bash
    $ docker run -d -p5775:5775/udp -p6831:6831/udp -p6832:6832/udp -p5778:5778 \
-   -p16686:16686 p14268:14268 jaegertracing/all-in-one:latest
+     -p16686:16686 -p14268:14268 jaegertracing/all-in-one:latest
 ```
 
 - Navigate to `backend-for-frontend/guide` and run the `mobile_bff_service` and `desktop_bff_service` using the following command
