@@ -1053,7 +1053,7 @@ Ballerina has a log package for logging to the console. You can import ballerina
 
 - Start the Ballerina Service with the following command from `backend-for-frontend/guide`
 ```
-   $ nohup ballerina run mobile_bff/ &>> ballerina.log&
+   $ nohup ballerina run mobile_bff > ballerina.log &
 ```
    NOTE: This will write the console log to the `ballerina.log` file in the `backend-for-frontend/guide` directory
 
