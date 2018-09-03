@@ -66,8 +66,7 @@ backend-for-frontend
       │   └── tests
       │       └── desktop_bff_service_test.bal
       └── sample_data_publisher
-          ├── sample_data_publisher.bal
-          └── sample_data.toml
+          └── sample_data_publisher.bal
 ```
 
 - Create the above directories in your local machine and also create empty `.bal` files.
