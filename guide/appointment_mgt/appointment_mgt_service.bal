@@ -1,15 +1,43 @@
 import ballerina/http;
 import ballerina/log;
 import ballerinax/docker;
+import ballerinax/kubernetes;
+
+// Kubernetes related config. Uncomment for Kubernetes deployment.
+// *******************************************************
+
+//@kubernetes:Ingress {
+//    hostname:"ballerina.guides.io",
+//    name:"ballerina-guides-appointment-mgt-service",
+//    path:"/appointment-mgt",
+//    targetPath:"/appointment-mgt"
+//}
+
+//@kubernetes:Service {
+//    serviceType:"NodePort",
+//    name:"ballerina-guides-appointment-mgt-service"
+//}
+
+//@kubernetes:Deployment {
+//    image:"ballerina.guides.io/appointment_mgt_service:v1.0",
+//    name:"ballerina-guides-appointment-mgt-service",
+//    dockerCertPath:"/Users/ranga/.minikube/certs",
+//    dockerHost:"tcp://192.168.99.100:2376"
+//}
 
 
-@docker:Config {
-    registry:"ballerina.guides.io",
-    name:"appointment_mgt_service",
-    tag:"v1.0"
-}
+// Docker related config. Uncomment for Docker deployment.
+// *******************************************************
 
-@docker:Expose{}
+// @docker:Config {
+//    registry:"ballerina.guides.io",
+//    name:"appointment_mgt_service",
+//    tag:"v1.0"
+//}
+
+//@docker:Expose{}
+
+
 endpoint http:Listener listener {
     port: 9092
 };

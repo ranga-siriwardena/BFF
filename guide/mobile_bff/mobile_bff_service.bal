@@ -1,19 +1,23 @@
 import ballerina/http;
 import ballerina/log;
 import ballerinax/docker;
-//import ballerinax/kubernetes;
+import ballerinax/kubernetes;
+
+// Kubernetes related config. Uncomment for Kubernetes deployment.
+// *******************************************************
 
 //@kubernetes:Ingress {
 //    hostname:"ballerina.guides.io",
 //    name:"ballerina-guides-mobile-bff-service",
-//    path:"/"
+//    path:"/mobile-bff",
+//    targetPath:"/mobile-bff"
 //}
-//
+
 //@kubernetes:Service {
 //    serviceType:"NodePort",
 //    name:"ballerina-guides-mobile-bff-service"
 //}
-//
+
 //@kubernetes:Deployment {
 //    image:"ballerina.guides.io/mobile_bff_service:v1.0",
 //    name:"ballerina-guides-mobile-bff-service",
@@ -21,13 +25,19 @@ import ballerinax/docker;
 //    dockerHost:"tcp://192.168.99.100:2376"
 //}
 
-@docker:Config {
-    registry:"ballerina.guides.io",
-    name:"mobile_bff_service",
-    tag:"v1.0"
-}
 
-@docker:Expose{}
+// Docker related config. Uncomment for Docker deployment.
+// *******************************************************
+
+//@docker:Config {
+//    registry:"ballerina.guides.io",
+//    name:"mobile_bff_service",
+//    tag:"v1.0"
+//}
+
+//@docker:Expose{}
+
+
 endpoint http:Listener listener {
     port: 9090
 };
@@ -36,32 +46,26 @@ endpoint http:Listener listener {
 // Client endpoint to communicate with appointment management service
 endpoint http:Client appointmentEP {
     url: "http://localhost:9092/appointment-mgt"
+
+    // URL for Docker deployment
+    // url: "http://appointment-mgt-container:9092/appointment-mgt"
 };
 
 // Client endpoint to communicate with medical record service
 endpoint http:Client medicalRecordEP {
     url: "http://localhost:9093/medical-records"
+
+    // URL for Docker deployment
+    // url: "http://medical-record-mgt-container:9093/medical-records"
 };
 
 // Client endpoint to communicate with message management service
 endpoint http:Client messageEP {
     url: "http://localhost:9095/message-mgt"
-};
 
-//// Client endpoint to communicate with appointment management service
-//endpoint http:Client appointmentEP {
-//    url: "http://appointment-mgt-container:9092/appointment-mgt"
-//};
-//
-//// Client endpoint to communicate with medical record service
-//endpoint http:Client medicalRecordEP {
-//    url: "http://medical-record-mgt-container:9093/medical-records"
-//};
-//
-//// Client endpoint to communicate with message management service
-//endpoint http:Client messageEP {
-//    url: "http://message-mgt-container:9095/message-mgt"
-//};
+    // URL for Docker deployment
+    // url: "http://message-mgt-container:9095/message-mgt"
+};
 
 
 // RESTful service.
